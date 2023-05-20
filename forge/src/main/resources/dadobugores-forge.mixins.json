@@ -1,0 +1,11 @@
+{
+  "required": false,
+  "package": "no.dadobug.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "client": [
+  ],
+  "mixins": [
+  ],
+  "injectors": {
+  }
+}

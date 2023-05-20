@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "": [
+      { "model": "dadobugores:block/bedrock_ae_certus_quartz_ore_0" },
+      { "model": "dadobugores:block/bedrock_ae_certus_quartz_ore_1" },
+      { "model": "dadobugores:block/bedrock_ae_certus_quartz_ore_2" },
+      { "model": "dadobugores:block/bedrock_ae_certus_quartz_ore_3" }
+    ]
+  }
+}

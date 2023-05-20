@@ -1,0 +1,44 @@
+modLoader = "javafml"
+loaderVersion = "[39,)"
+#issueTrackerURL = ""
+license = "MIT License"
+
+[[mods]]
+modId = "dadobugores"
+version = "${version}"
+displayName = "Dadobug1111's Ores"
+authors = [
+    "Dadobug1111 - Owner/Creator",
+    "Ironcanon - Contributor",
+    "Galgerahn - Concepts"
+]
+description = """Adds Bedrock ores into the game, giving slow, but unlimited resources.\n\nAssets used from the following mods to add associated bedrock ores:\nTech Reborn - Team Reborn\nTinkers Construct - Slime Knights\nApplied Energistics 2 - Team Applied Energistics\nExtreme Reactors - ZeroNoRyouki / Erogenous Beef\nBigger Reactors - BiggerSeries / Erogenous Beef\nImmersive Engineering - BluSunrize\nMythic Metals - Noaaan\nCreate - Creators of Create\nMekanism - Mekanism\nUndergarden - quek04\nBeyond Earth - MrScautHD\nFTB Industrial Contraptions - Feed The Beast\nMalum - SammySemicolon\nThermal Series - TeamCoFH"""
+logoFile = "bedrock_diamond_ore_big.png"
+
+[[dependencies.dadobugores]]
+modId = "forge"
+mandatory = true
+versionRange = "[40,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.dadobugores]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.18.2,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.dadobugores]]
+modId = "architectury"
+mandatory = true
+versionRange = "[4.0.30,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.dadobugores]]
+modId = "moonlight"
+mandatory = true
+versionRange = "[2.4.0,)"
+ordering = "AFTER"
+side = "BOTH"

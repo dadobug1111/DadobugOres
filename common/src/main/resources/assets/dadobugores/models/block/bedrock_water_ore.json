@@ -1,0 +1,8 @@
+{
+  "parent": "dadobugores:block/fluid_ore",
+  "textures": {
+    "back": "minecraft:block/bedrock",
+    "base": "minecraft:block/water_still",
+    "overlay": "dadobugores:block/bedrock_fluid_general_ore"
+  }
+}

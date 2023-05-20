@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "dadobugores",
+  "version": "${version}",
+  "name": "Dadobug1111's Ores",
+  "description": "Adds Bedrock ores into the game, giving slow, but unlimited resources.\n\nAssets used from the following mods to add associated bedrock ores:\nTech Reborn - Team Reborn\nTinkers Construct - Slime Knights\nApplied Energistics 2 - Team Applied Energistics\nExtreme Reactors - ZeroNoRyouki / Erogenous Beef\nBigger Reactors - BiggerSeries / Erogenous Beef\nImmersive Engineering - BluSunrize\nMythic Metals - Noaaan\nCreate - Creators of Create\nMekanism - Mekanism\nUndergarden - quek04\nBeyond Earth - MrScautHD\nFTB Industrial Contraptions - Feed The Beast\nMalum - SammySemicolon\nThermal Series - TeamCoFH",
+  "authors": [
+    "Dadobug1111 - Owner/Creator",
+    "Ironcanon - Contributor",
+    "Galgerahn - Concepts"
+  ],
+  "contact": {
+  },
+  "license": "MIT License",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "no.dadobug.fabric.dadobugoresFabric"
+    ],
+    "client": [
+      "no.dadobug.fabric.dadobugoresFabric"
+    ],
+    "server": [
+      "no.dadobug.fabric.dadobugoresFabric"
+    ]
+  },
+  "mixins": [
+    "dadobugores.mixins.json",
+    "mixin.dadobugores-common.json"
+  ],
+  "depends": {
+    "fabric": "*",
+    "minecraft": ">=1.18.2",
+    "architectury": ">=4.0.30",
+    "moonlight": ">=2.4.0"
+  }
+}

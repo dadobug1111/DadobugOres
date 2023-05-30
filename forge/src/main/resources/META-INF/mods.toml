@@ -39,6 +39,6 @@ side = "BOTH"
 [[dependencies.dadobugores]]
 modId = "moonlight"
 mandatory = true
-versionRange = "[2.4.0,)"
+versionRange = "[1.19.2-2.2.0,)"
 ordering = "AFTER"
 side = "BOTH"

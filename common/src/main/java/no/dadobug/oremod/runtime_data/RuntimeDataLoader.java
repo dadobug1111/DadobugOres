@@ -112,7 +112,7 @@ public class RuntimeDataLoader {
         blockTagMap.keySet().forEach((key) -> {
             SimpleTagBuilder builder = SimpleTagBuilder.of(key);
             for (ResourceLocation resourceLocation : blockTagMap.get(key)) {
-                builder.addOptionalElement(resourceLocation);
+                builder.add(resourceLocation);
             }
             data.addTag(builder, Registry.BLOCK_REGISTRY);
         });
@@ -120,7 +120,7 @@ public class RuntimeDataLoader {
         itemTagMap.keySet().forEach((key) -> {
             SimpleTagBuilder builder = SimpleTagBuilder.of(key);
             for (ResourceLocation resourceLocation : itemTagMap.get(key)) {
-                builder.addOptionalElement(resourceLocation);
+                builder.add(resourceLocation);
             }
             data.addTag(builder, Registry.ITEM_REGISTRY);
         });

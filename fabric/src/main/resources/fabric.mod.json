@@ -33,6 +33,6 @@
     "fabric": "*",
     "minecraft": ">=1.18.2",
     "architectury": ">=4.0.30",
-    "moonlight": ">=2.4.0"
+    "moonlight": ">=1.19.2-2.2.0"
   }
 }

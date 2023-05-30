@@ -461,8 +461,6 @@ public class DefaultJsonBlockGenerator {
 
 
 
-        densify(BlockList, "coal_ore", "minecraft", "Dense Coal Ore", Blocks.STONE, 0, 2, 3.0f, 0);
-        densify(BlockList, "deepslate_coal_ore", "minecraft", "Dense Deepslate Coal Ore", Blocks.DEEPSLATE, 0, 2, 4.5f, 0);
 
         dualDensify(BlockList, "coal", "minecraft", "Coal", 0, 2, 0);
         dualDensify(BlockList, "iron", "minecraft", "Iron", 1);
@@ -475,7 +473,10 @@ public class DefaultJsonBlockGenerator {
 
         densify(BlockList, "nether_gold_ore", "minecraft", "Dense Nether Gold Ore", Blocks.NETHERRACK, 0, 1, 3.0f, 0);
         densify(BlockList, "nether_quartz_ore", "minecraft", "Dense Nether Quartz Ore", Blocks.NETHERRACK, 2, 5, 3.0f, 0);
-        densify(BlockList, "ancient_debris", "minecraft", "Dense Ancient Debris", Blocks.ANCIENT_DEBRIS, 30.0f, 3);
+        //densify(BlockList, "ancient_debris", "minecraft", "Dense Ancient Debris", Blocks.ANCIENT_DEBRIS, 30.0f, 3);
+        BlockList.add(new Pair<>("dense_ancient_debris", new RegenerativeBlockConfig("dense_ancient_debris").setReplaceBlockId(Blocks.ANCIENT_DEBRIS).setEnglishName("Dense Ancient Debris").setStandardTexture(false).setTextureClone("minecraft:block/ancient_debris_side").setInfinite(false)
+                .setSilkable(true).setReplace(true).setLuminance(2).setDenseOreGenTarget("minecraft:ancient_debris").setHardness(30.0f).setToolLevel(3).setOnlyValidTools(false)
+                .setLootConfig(new RegenerativeOreLootConfig().addOre("minecraft:ancient_debris").setSilkable(true)).toJsonObject()));
 
 
         dualDensify(BlockList, "bauxite_ore", "deepslate_bauxite_ore", "tr_bauxite", "techreborn", "Bauxite", 2);
@@ -643,22 +644,22 @@ public class DefaultJsonBlockGenerator {
     public static void dualDensify(List<Pair<String, JsonObject>> list, String targetOreSnippit, String targetMod, String nameSnippit, int xpMin, int xpMax, int toolLevel){
 
         densify(list, targetOreSnippit + "_ore", targetMod, "Dense " + nameSnippit + " Ore", Blocks.STONE, xpMin, xpMax, 3.0f, toolLevel);
-        densify(list, "deepslate"+ targetOreSnippit + "_ore", targetMod, "Dense Deepslate " + nameSnippit + " Ore", Blocks.DEEPSLATE, xpMin, xpMax, 4.5f, toolLevel);
+        densify(list, "deepslate_" + targetOreSnippit + "_ore", targetMod, "Dense Deepslate " + nameSnippit + " Ore", Blocks.DEEPSLATE, xpMin, xpMax, 4.5f, toolLevel);
     }
     public static void dualDensify(List<Pair<String, JsonObject>> list, String targetOreSnippit, String targetMod, String nameSnippit, int toolLevel){
 
         densify(list, targetOreSnippit + "_ore", targetMod, "Dense " + nameSnippit + " Ore", Blocks.STONE, 3.0f, toolLevel);
-        densify(list, "deepslate"+ targetOreSnippit + "_ore", targetMod, "Dense Deepslate " + nameSnippit + " Ore", Blocks.DEEPSLATE, 4.5f, toolLevel);
+        densify(list, "deepslate_" + targetOreSnippit + "_ore", targetMod, "Dense Deepslate " + nameSnippit + " Ore", Blocks.DEEPSLATE, 4.5f, toolLevel);
     }
     public static void dualDensify(List<Pair<String, JsonObject>> list, String targetOre, String targetDeepOre, String idSnippit, String targetMod, String nameSnippit, int xpMin, int xpMax, int toolLevel){
 
         densify(list, targetOre, idSnippit + "_ore", targetMod, "Dense " + nameSnippit + " Ore", Blocks.STONE, xpMin, xpMax, 3.0f, toolLevel);
-        densify(list, targetDeepOre, "deepslate"+ idSnippit + "_ore", targetMod, "Dense Deepslate " + nameSnippit + " Ore", Blocks.DEEPSLATE, xpMin, xpMax, 4.5f, toolLevel);
+        densify(list, targetDeepOre, "deepslate_" + idSnippit + "_ore", targetMod, "Dense Deepslate " + nameSnippit + " Ore", Blocks.DEEPSLATE, xpMin, xpMax, 4.5f, toolLevel);
     }
     public static void dualDensify(List<Pair<String, JsonObject>> list, String targetOre, String targetDeepOre, String idSnippit, String targetMod, String nameSnippit, int toolLevel){
 
         densify(list, targetOre, idSnippit + "_ore", targetMod, "Dense " + nameSnippit + " Ore", Blocks.STONE, 3.0f, toolLevel);
-        densify(list, targetDeepOre, "deepslate"+ idSnippit + "_ore", targetMod, "Dense Deepslate " + nameSnippit + " Ore", Blocks.DEEPSLATE, 4.5f, toolLevel);
+        densify(list, targetDeepOre, "deepslate_" + idSnippit + "_ore", targetMod, "Dense Deepslate " + nameSnippit + " Ore", Blocks.DEEPSLATE, 4.5f, toolLevel);
     }
     public static void densify(List<Pair<String, JsonObject>> list, String targetOre, String targetMod, String name, Block hostStone, String texture, float probability, int xpMin, int xpMax, float hardness, int toolLevel){
         list.add(new Pair<>("dense_" + targetOre, new RegenerativeBlockConfig("dense_" + targetOre).addRequiredMod(targetMod).setReplaceBlockId(hostStone).setEnglishName(name).setStandardTexture(false).setTextureClone(texture).setInfinite(false)
@@ -713,23 +714,23 @@ public class DefaultJsonBlockGenerator {
     }
 
     public static void densify(List<Pair<String, JsonObject>> list, String targetOre, String id, String targetMod, String name, Block hostStone, String texture, float probability, float hardness, int toolLevel){
-        densify(list, targetOre, targetMod, id, name, hostStone, texture, probability, 0, 0, hardness, toolLevel);
+        densify(list, targetOre, id, targetMod, name, hostStone, texture, probability, 0, 0, hardness, toolLevel);
     }
     public static void densify(List<Pair<String, JsonObject>> list, String targetOre, String id, String targetMod, String name, Block hostStone, String texture, int xpMin, int xpMax, float hardness, int toolLevel){
-        densify(list, targetOre, targetMod, id, name, hostStone, texture, EntryModule.DefaultRegenerativeBlockConfig.denseOreGenProbability, xpMin, xpMax, hardness, toolLevel);
+        densify(list, targetOre, id, targetMod, name, hostStone, texture, EntryModule.DefaultRegenerativeBlockConfig.denseOreGenProbability, xpMin, xpMax, hardness, toolLevel);
     }
     public static void densify(List<Pair<String, JsonObject>> list, String targetOre, String id, String targetMod, String name, Block hostStone, String texture, float hardness, int toolLevel) {
-        densify(list, targetOre, targetMod, id, name, hostStone, texture, EntryModule.DefaultRegenerativeBlockConfig.denseOreGenProbability, 0, 0, hardness, toolLevel);
+        densify(list, targetOre, id, targetMod, name, hostStone, texture, EntryModule.DefaultRegenerativeBlockConfig.denseOreGenProbability, 0, 0, hardness, toolLevel);
 
     }
     public static void densify(List<Pair<String, JsonObject>> list, String targetOre, String id, String targetMod, String name, Block hostStone, float probability, float hardness, int toolLevel){
-        densify(list, targetOre, targetMod, id, name, hostStone, targetMod + ":block/" + targetOre, probability, 0, 0, hardness, toolLevel);
+        densify(list, targetOre, id, targetMod, name, hostStone, targetMod + ":block/" + targetOre, probability, 0, 0, hardness, toolLevel);
     }
     public static void densify(List<Pair<String, JsonObject>> list, String targetOre, String id, String targetMod, String name, Block hostStone, int xpMin, int xpMax, float hardness, int toolLevel){
-        densify(list, targetOre, targetMod, id, name, hostStone, targetMod + ":block/" + targetOre, EntryModule.DefaultRegenerativeBlockConfig.denseOreGenProbability, xpMin, xpMax, hardness, toolLevel);
+        densify(list, targetOre, id, targetMod, name, hostStone, targetMod + ":block/" + targetOre, EntryModule.DefaultRegenerativeBlockConfig.denseOreGenProbability, xpMin, xpMax, hardness, toolLevel);
     }
     public static void densify(List<Pair<String, JsonObject>> list, String targetOre, String id, String targetMod, String name, Block hostStone, float hardness, int toolLevel){
-        densify(list, targetOre, targetMod, id, name, hostStone, targetMod + ":block/" + targetOre, EntryModule.DefaultRegenerativeBlockConfig.denseOreGenProbability, 0, 0, hardness, toolLevel);
+        densify(list, targetOre, id, targetMod, name, hostStone, targetMod + ":block/" + targetOre, EntryModule.DefaultRegenerativeBlockConfig.denseOreGenProbability, 0, 0, hardness, toolLevel);
     }
 
     public static void densify(List<Pair<String, JsonObject>> list, String targetOre, String id, String targetMod, String name, String hostStone, String texture, float probability, int xpMin, int xpMax, float hardness, int toolLevel){
@@ -739,27 +740,27 @@ public class DefaultJsonBlockGenerator {
     }
 
     public static void densify(List<Pair<String, JsonObject>> list, String targetOre, String id, String targetMod, String name, String hostStone, String texture, float probability, float hardness, int toolLevel){
-        densify(list, targetOre, targetMod, id, name, hostStone, texture, probability, 0, 0, hardness, toolLevel);
+        densify(list, targetOre, id, targetMod, name, hostStone, texture, probability, 0, 0, hardness, toolLevel);
     }
 
     public static void densify(List<Pair<String, JsonObject>> list, String targetOre, String id, String targetMod, String name, String hostStone, String texture, int xpMin, int xpMax, float hardness, int toolLevel){
-        densify(list, targetOre, targetMod, id, name, hostStone, texture, EntryModule.DefaultRegenerativeBlockConfig.denseOreGenProbability, xpMin, xpMax, hardness, toolLevel);
+        densify(list, targetOre, id, targetMod, name, hostStone, texture, EntryModule.DefaultRegenerativeBlockConfig.denseOreGenProbability, xpMin, xpMax, hardness, toolLevel);
     }
 
     public static void densify(List<Pair<String, JsonObject>> list, String targetOre, String id, String targetMod, String name, String hostStone, String texture, float hardness, int toolLevel){
-        densify(list, targetOre, targetMod, id, name, hostStone, texture, EntryModule.DefaultRegenerativeBlockConfig.denseOreGenProbability, 0, 0, hardness, toolLevel);
+        densify(list, targetOre, id, targetMod, name, hostStone, texture, EntryModule.DefaultRegenerativeBlockConfig.denseOreGenProbability, 0, 0, hardness, toolLevel);
     }
 
     public static void densify(List<Pair<String, JsonObject>> list, String targetOre, String id, String targetMod, String name, String hostStone, float probability, float hardness, int toolLevel){
-        densify(list, targetOre, targetMod, id, name, hostStone, targetMod + ":block/" + targetOre, probability, 0, 0, hardness, toolLevel);
+        densify(list, targetOre, id, targetMod, name, hostStone, targetMod + ":block/" + targetOre, probability, 0, 0, hardness, toolLevel);
     }
 
     public static void densify(List<Pair<String, JsonObject>> list, String targetOre, String id, String targetMod, String name, String hostStone, int xpMin, int xpMax, float hardness, int toolLevel){
-        densify(list, targetOre, targetMod, id, name, hostStone, targetMod + ":block/" + targetOre, EntryModule.DefaultRegenerativeBlockConfig.denseOreGenProbability, xpMin, xpMax, hardness, toolLevel);
+        densify(list, targetOre, id, targetMod, name, hostStone, targetMod + ":block/" + targetOre, EntryModule.DefaultRegenerativeBlockConfig.denseOreGenProbability, xpMin, xpMax, hardness, toolLevel);
     }
 
     public static void densify(List<Pair<String, JsonObject>> list, String targetOre, String id, String targetMod, String name, String hostStone, float hardness, int toolLevel){
-        densify(list, targetOre, targetMod, name, hostStone, targetMod + ":block/" + targetOre, EntryModule.DefaultRegenerativeBlockConfig.denseOreGenProbability, 0, 0, hardness, toolLevel);
+        densify(list, targetOre, id, targetMod, name, hostStone, targetMod + ":block/" + targetOre, EntryModule.DefaultRegenerativeBlockConfig.denseOreGenProbability, 0, 0, hardness, toolLevel);
     }
     //too much?
 }

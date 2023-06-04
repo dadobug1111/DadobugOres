@@ -150,14 +150,14 @@ public class EntryModule {
 
     public static LootItemConditionType MOD_LOOT_CONDITION_TYPE;
 
-    public static void init() {
+    public static void init(boolean isClient) {
         ENCHANTS.register();
         BLOCKS.register();
         ITEMS.register();
         BLOCK_ENTITY_TYPES.register();
         FEATURES.register();
 
-        RuntimeDataLoader.provider.register();
+        if(!isClient) RuntimeDataLoader.provider.register();
     }
 
     public static void initLate(boolean isClient) {

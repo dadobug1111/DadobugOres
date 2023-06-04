@@ -16,13 +16,13 @@ public class dadobugoresFabric implements ModInitializer, ClientModInitializer, 
 
     @Override
     public void onInitializeClient() {
-        EntryModule.init();
+        EntryModule.init(true);
         EntryModule.initLate(true);
     }
 
     @Override
     public void onInitializeServer() {
-        EntryModule.init();
+        EntryModule.init(false);
         EntryModule.initLate(false);
     }
 

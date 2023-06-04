@@ -1,5 +1,6 @@
 package no.dadobug.forge;
 
+import dev.architectury.platform.Platform;
 import dev.architectury.platform.forge.EventBuses;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -22,7 +23,7 @@ public class dadobugoresForge {
     public dadobugoresForge() {
         // Submit our event bus to let architectury register our content on the right time
         EventBuses.registerModEventBus(EntryModule.modid, FMLJavaModLoadingContext.get().getModEventBus());
-        EntryModule.init();
+        EntryModule.init(Platform.getEnv().isClient());
         IEventBus bus = EventBuses.getModEventBus(EntryModule.modid).get();
         bus.addListener(this::registerData);
         bus.addListener(this::registerLateClient);

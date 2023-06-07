@@ -157,7 +157,7 @@ public class EntryModule {
         BLOCK_ENTITY_TYPES.register();
         FEATURES.register();
 
-        if(!isClient) RuntimeDataLoader.provider.register();
+        if(isClient) RuntimeDataLoader.provider.register();
     }
 
     public static void initLate(boolean isClient) {

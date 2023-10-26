@@ -72,12 +72,28 @@ public class RegenerativeBlockEntity extends BlockEntity {
         EntryModule.LOGGER.debug("damage");
         Block block = state.getBlock();
         if(block instanceof RegenerativeBlock reBlock){
-            if(!reBlock.isInfinite() && !(state.is(EntryModule.CORE_TAG) && (EnchantmentHelper.getItemEnchantmentLevel(EntryModule.EXTRACTION.get(), this.lastItem) > 0)) && !(state.is(EntryModule.FRACTURE_TAG) && (EnchantmentHelper.getItemEnchantmentLevel(EntryModule.CURSE_OF_FRACTURING.get(), this.lastItem) > 0)) && !(((RegenerativeBlock) block).isSilk_able() && (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, this.lastItem) > 0))){
+            if(!reBlock.isInfinite() && !(state.is(EntryModule.CORE_TAG) && (EnchantmentHelper.getItemEnchantmentLevel(EntryModule.EXTRACTION.get(), this.lastItem) > 0)) && !(state.is(EntryModule.FRACTURE_TAG) && (EnchantmentHelper.getItemEnchantmentLevel(EntryModule.CURSE_OF_FRACTURING.get(), this.lastItem) > 0)) && !(reBlock.isSilk_able() && (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, this.lastItem) > 0))){
                 if(this.durability < 0){
                     this.resetDurability();
                 }
                 for(int i = 0; i<(EnchantmentHelper.getItemEnchantmentLevel(EntryModule.SHATTERING.get(), this.lastItem)+1); i++) {
                     this.durability = reBlock.damageFunction.apply(this.durability, EnchantmentHelper.getItemEnchantmentLevel(EntryModule.SHATTERING.get(), this.lastItem), EnchantmentHelper.getItemEnchantmentLevel(EntryModule.GENTLE_MINING.get(), this.lastItem), this.getLevel().getRandom());
+                }
+                this.setChanged();
+            }
+        }
+    }
+
+    public void damageBlockFluid(BlockState state){
+        EntryModule.LOGGER.debug("damage");
+        Block block = state.getBlock();
+        if(block instanceof RegenerativeBlock reBlock){
+            if(!reBlock.isInfinite()){
+                if(this.durability < 0){
+                    this.resetDurability();
+                }
+                for(int i = 0; i<(EnchantmentHelper.getItemEnchantmentLevel(EntryModule.SHATTERING.get(), this.lastItem)+1); i++) {
+                    this.durability--;
                 }
                 this.setChanged();
             }

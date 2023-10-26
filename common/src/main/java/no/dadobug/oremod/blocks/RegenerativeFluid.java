@@ -37,7 +37,7 @@ public class RegenerativeFluid extends RegenerativeBlock implements BucketPickup
         this(settings, ReplaceWithBedrock, ItemStack.EMPTY, fluidIn, UniformInt.of(XPmin, XPmax), UniformInt.of(DurabilityMin, DurabilityMax), infinite, silk_able, replaceBlock, damageFunction, onlyValidTools);
     }
     public RegenerativeFluid(BlockBehaviour.Properties settings, Boolean ReplaceWithBedrock, ItemStack bucketIn, Optional<SoundEvent> bucketSoundIn, int XPmin, int XPmax, int DurabilityMin, int DurabilityMax, boolean infinite, boolean silk_able, BlockState replaceBlock, PropertyDispatch.QuadFunction<Integer, Integer, Integer, RandomSource, Integer> damageFunction, boolean onlyValidTools) {
-        this(settings, ReplaceWithBedrock, bucketIn, ItemStack.EMPTY, bucketSoundIn, UniformInt.of(XPmin, XPmax), UniformInt.of(DurabilityMin, DurabilityMax), infinite, silk_able, replaceBlock, damageFunction, onlyValidTools);
+        this(settings, ReplaceWithBedrock, ItemStack.EMPTY, bucketIn, bucketSoundIn, UniformInt.of(XPmin, XPmax), UniformInt.of(DurabilityMin, DurabilityMax), infinite, silk_able, replaceBlock, damageFunction, onlyValidTools);
 
     }
 
@@ -72,8 +72,8 @@ public class RegenerativeFluid extends RegenerativeBlock implements BucketPickup
     @Override
     public ItemStack pickupBlock(LevelAccessor world, BlockPos pos, BlockState state) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof RegenerativeBlockEntity && !world.isClientSide()) {
-            ((RegenerativeBlockEntity) blockEntity).damageBlock(state);
+        if (blockEntity instanceof RegenerativeBlockEntity e && !world.isClientSide()) {
+            e.damageBlockFluid(state);
         }
         if (this.fluid != Fluids.EMPTY) {
             return new ItemStack(this.fluid.getBucket());
@@ -102,15 +102,15 @@ public class RegenerativeFluid extends RegenerativeBlock implements BucketPickup
             AtomicBoolean used = new AtomicBoolean(false);
             player.getHandSlots().forEach((stack) -> {
                 if (stack.getItem() instanceof BottleItem && !used.get()) {
-                    stack.shrink(1);
+                    if(!player.isCreative())stack.shrink(1);
                     used.set(true);
                     player.getInventory().add(this.bottleItem.copy());
                 }
             });
             if (used.get()) {
                 BlockEntity blockEntity = world.getBlockEntity(pos);
-                if (blockEntity instanceof RegenerativeBlockEntity && !world.isClientSide()) {
-                    ((RegenerativeBlockEntity) blockEntity).damageBlock(state);
+                if (blockEntity instanceof RegenerativeBlockEntity e && !world.isClientSide()) {
+                    e.damageBlockFluid(state);
                 }
                 return InteractionResult.SUCCESS;
             }

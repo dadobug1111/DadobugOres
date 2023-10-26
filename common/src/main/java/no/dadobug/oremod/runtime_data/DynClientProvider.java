@@ -1,7 +1,7 @@
 package no.dadobug.oremod.runtime_data;
 
 import com.mojang.datafixers.util.Pair;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import dev.architectury.platform.Platform;
 import net.mehvahdjukaar.moonlight.api.resources.ResType;
 import net.mehvahdjukaar.moonlight.api.resources.StaticResource;
 import net.mehvahdjukaar.moonlight.api.resources.assets.LangBuilder;
@@ -28,7 +28,7 @@ public class DynClientProvider extends DynClientResourcesProvider {
     }
     protected DynClientProvider(DynamicTexturePack pack) {
         super(pack);
-        this.dynamicPack.generateDebugResources = PlatformHelper.isDev();
+        this.dynamicPack.generateDebugResources = Platform.isDevelopmentEnvironment();
     }
 
     @Override

@@ -158,6 +158,7 @@ public class EntryModule {
         FEATURES.register();
 
         if(isClient) RuntimeDataLoader.provider.register();
+        RuntimeDataLoader.providerServer.register();
     }
 
     public static void initLate(boolean isClient) {

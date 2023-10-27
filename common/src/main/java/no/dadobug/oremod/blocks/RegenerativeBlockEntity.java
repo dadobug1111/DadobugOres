@@ -60,7 +60,7 @@ public class RegenerativeBlockEntity extends BlockEntity {
     }
 
     public void registerMiningParameters(Player player, BlockState state){
-        EntryModule.LOGGER.debug("registerMiningParameters1");
+        EntryModule.LOGGER.debug("registerMiningParameters - " + this.keepstate.toString() + " at " + this.worldPosition.toShortString());
         this.regenComplete = false;
         this.lastItem = player.getMainHandItem();
         this.lastPlayer = player;
@@ -69,7 +69,7 @@ public class RegenerativeBlockEntity extends BlockEntity {
     }
 
     public void damageBlock(BlockState state){
-        EntryModule.LOGGER.debug("damage");
+        EntryModule.LOGGER.debug("damage - " + this.keepstate.toString() + " at " + this.worldPosition.toShortString());
         Block block = state.getBlock();
         if(block instanceof RegenerativeBlock reBlock){
             if(!reBlock.isInfinite() && !(state.is(EntryModule.CORE_TAG) && (EnchantmentHelper.getItemEnchantmentLevel(EntryModule.EXTRACTION.get(), this.lastItem) > 0)) && !(state.is(EntryModule.FRACTURE_TAG) && (EnchantmentHelper.getItemEnchantmentLevel(EntryModule.CURSE_OF_FRACTURING.get(), this.lastItem) > 0)) && !(reBlock.isSilk_able() && (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, this.lastItem) > 0))){
@@ -85,7 +85,7 @@ public class RegenerativeBlockEntity extends BlockEntity {
     }
 
     public void damageBlockFluid(BlockState state){
-        EntryModule.LOGGER.debug("damage");
+        EntryModule.LOGGER.debug("damage fluid - " + this.keepstate.toString() + " at " + this.worldPosition.toShortString());
         Block block = state.getBlock();
         if(block instanceof RegenerativeBlock reBlock){
             if(!reBlock.isInfinite()){
@@ -101,7 +101,7 @@ public class RegenerativeBlockEntity extends BlockEntity {
     }
 
     public boolean regen(Level worldIn, BlockState newState) {
-        EntryModule.LOGGER.debug("regen");
+        EntryModule.LOGGER.debug("regen - " + this.keepstate.toString() + " at " + this.worldPosition.toShortString());
 
         if(this.scronch) {
             this.setChanged();
@@ -126,7 +126,7 @@ public class RegenerativeBlockEntity extends BlockEntity {
                 if (!this.stacksDropped && !this.regenComplete) {
                     if(this.lastPlayer.hasCorrectToolForDrops(this.keepstate))this.keepstate.getBlock().playerDestroy(worldIn, this.lastPlayer, this.worldPosition, this.keepstate, this, this.lastItem);
                     this.stacksDropped = false;
-                    EntryModule.LOGGER.debug("forced drops");
+                    EntryModule.LOGGER.debug("forced drops - " + this.keepstate.toString() + " at " + this.worldPosition.toShortString());
                 }
                 this.setChanged();
                 return false;
@@ -135,7 +135,7 @@ public class RegenerativeBlockEntity extends BlockEntity {
                 if (!this.stacksDropped && !this.regenComplete) {
                     if(this.lastPlayer.hasCorrectToolForDrops(this.keepstate))this.keepstate.getBlock().playerDestroy(worldIn, this.lastPlayer, this.worldPosition, this.keepstate, this, this.lastItem);
                     this.stacksDropped = false;
-                    EntryModule.LOGGER.debug("forced drops");
+                    EntryModule.LOGGER.debug("forced drops - " + this.keepstate.toString() + " at " + this.worldPosition.toShortString());
                 }
                 this.setChanged();
                 return false;
@@ -145,7 +145,7 @@ public class RegenerativeBlockEntity extends BlockEntity {
                     if (!this.stacksDropped && !this.regenComplete) {
                         if(this.lastPlayer.hasCorrectToolForDrops(this.keepstate))this.keepstate.getBlock().playerDestroy(worldIn, this.lastPlayer, this.worldPosition, this.keepstate, this, this.lastItem);
                         this.stacksDropped = false;
-                        EntryModule.LOGGER.debug("forced drops");
+                        EntryModule.LOGGER.debug("forced drops - " + this.keepstate.toString() + " at " + this.worldPosition.toShortString());
                     }
                 }
                 this.setChanged();
@@ -153,11 +153,11 @@ public class RegenerativeBlockEntity extends BlockEntity {
             } else if(((RegenerativeBlock) this.keepstate.getBlock()).isSilk_able() && (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, this.lastItem) > 0)){
                 return false;
             } else if(newState != this.keepstate && (this.durability > 0 || ((RegenerativeBlock) this.keepstate.getBlock()).isInfinite())){
-                EntryModule.LOGGER.debug("put it back");
+                EntryModule.LOGGER.debug("put it back - " + this.keepstate.toString() + " at " + this.worldPosition.toShortString());
                 worldIn.setBlockAndUpdate(this.worldPosition, this.keepstate);
                 if (!this.stacksDropped && !this.regenComplete) {
                     if(this.lastPlayer.hasCorrectToolForDrops(this.keepstate))this.keepstate.getBlock().playerDestroy(worldIn, this.lastPlayer, this.worldPosition, this.keepstate, this, this.lastItem);
-                    EntryModule.LOGGER.debug("forced drops");
+                    EntryModule.LOGGER.debug("forced drops - " + this.keepstate.toString() + " at " + this.worldPosition.toShortString());
                 }
                 this.lastItem = ItemStack.EMPTY;
                 this.regenComplete = true;

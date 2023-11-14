@@ -25,6 +25,16 @@ public class DefaultJsonGenGenerator {
 
     public static void addDefaults(){
         List<Pair<String, JsonObject>> GenList = new ArrayList<>();
+
+        GenList.add(new Pair<>("native_iron_ore_overworld", new PropagatorOreGenConfig("native_iron_ore_overworld").setTargetBlock("NULL").setTargetTag("minecraft:deepslate_ore_replaceables")
+                .setOreBlock(EntryModule.modid +":native_iron_ore").setSize(35).setChance(1).setLayer("all").addBiomeTag(BiomeTags.IS_OVERWORLD).toJsonObject()));
+
+        GenList.add(new Pair<>("native_gold_ore_overworld", new PropagatorOreGenConfig("native_gold_ore_overworld").setTargetBlock("NULL").setTargetTag("minecraft:deepslate_ore_replaceables")
+                .setOreBlock(EntryModule.modid +":native_gold_ore").setSize(25).setChance(1).setLayer("all").addBiomeTag(BiomeTags.IS_OVERWORLD).toJsonObject()));
+
+
+
+
         GenList.add(new Pair<>("bedrock_coal_ore_overworld", new PropagatorOreGenConfig("bedrock_coal_ore_overworld")
                 .setOreBlock(EntryModule.modid +":bedrock_coal_ore").setSize(20).setChance(3).addBiomeTag(BiomeTags.IS_OVERWORLD).toJsonObject()));
 

@@ -7,8 +7,8 @@ import no.dadobug.oremod.EntryModule;
 import java.util.HashMap;
 import java.util.Map;
 
-@Config(name = EntryModule.modid + "\\" + "bedrock_ores_remap")
-public class RemapConfig implements ConfigData {
+@Config(name = EntryModule.modid + "\\" + "bedrock_ores_block_remap")
+public class BlockRemapConfig implements ConfigData {
 
     public Map<String, String> targetMap = genDefaultMap();
 

@@ -28,7 +28,7 @@ public class dadobugoresFabric implements ModInitializer, ClientModInitializer, 
 
     @Override
     public void onInitialize() {
-        EntryModule.MAPPING_CONFIG.targetMap.forEach(this::registerUnmoddedSwapBlock);
+        EntryModule.BLOCK_MAPPING_CONFIG.targetMap.forEach(this::registerUnmoddedSwapBlock);
     }
 
     public void registerSwapBlock(String target, String replacement){

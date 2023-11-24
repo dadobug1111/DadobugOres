@@ -2,8 +2,10 @@ package no.dadobug.forge;
 
 import dev.architectury.platform.Platform;
 import dev.architectury.platform.forge.EventBuses;
+import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.data.event.GatherDataEvent;
@@ -45,8 +47,25 @@ public class dadobugoresForge {
     }
     private void registerMissingMappings(MissingMappingsEvent event) {
         event.getMappings(Registry.BLOCK_REGISTRY, "dadobugbedrockores").forEach((blockMapping) -> {
-            if(EntryModule.MAPPING_CONFIG.targetMap.containsKey(blockMapping.getKey().getPath())) {
-                blockMapping.remap(ForgeRegistries.BLOCKS.getValue(ResourceLocation.tryParse(EntryModule.MAPPING_CONFIG.targetMap.get(blockMapping.getKey().getPath()))));
+            if(EntryModule.BLOCK_MAPPING_CONFIG.targetMap.containsKey(blockMapping.getKey().getPath())) {
+                blockMapping.remap(ForgeRegistries.BLOCKS.getValue(ResourceLocation.tryParse(EntryModule.BLOCK_MAPPING_CONFIG.targetMap.get(blockMapping.getKey().getPath()))));
+            }
+        });
+        event.getMappings(Registry.ITEM_REGISTRY, "dadobugbedrockores").forEach((itemMapping) -> {
+            if(EntryModule.BLOCK_MAPPING_CONFIG.targetMap.containsKey(itemMapping.getKey().getPath())) {
+                itemMapping.remap(ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(EntryModule.BLOCK_MAPPING_CONFIG.targetMap.get(itemMapping.getKey().getPath()))));
+            }
+            if(EntryModule.ITEM_MAPPING_CONFIG.targetMap.containsKey(itemMapping.getKey().getPath())) {
+                itemMapping.remap(ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(EntryModule.ITEM_MAPPING_CONFIG.targetMap.get(itemMapping.getKey().getPath()))));
+            }
+        });
+
+        event.getMappings(Registry.ENCHANTMENT_REGISTRY, "dadobugbedrockores").forEach((enchantmentMapping) -> {
+            for (RegistrySupplier<Enchantment> enchant : EntryModule.ENCHANTS) {
+                if (enchantmentMapping.getKey().getPath().equals(enchant.getId().getPath())) {
+                    enchantmentMapping.remap(enchant.get());
+                    break;
+                }
             }
         });
     }

@@ -41,7 +41,10 @@ import no.dadobug.oremod.json_configs.DefaultJsonGenGenerator;
 import no.dadobug.oremod.json_configs.DynamicGenerationConfig;
 import no.dadobug.oremod.json_configs.JsonConfig;
 import no.dadobug.oremod.runtime_data.RuntimeDataLoader;
-import no.dadobug.oremod.worldgen.*;
+import no.dadobug.oremod.worldgen.BedrockOreFeatureConfig;
+import no.dadobug.oremod.worldgen.BedrockOreGenerator;
+import no.dadobug.oremod.worldgen.DenseOreGenerator;
+import no.dadobug.oremod.worldgen.OreGenConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,7 +58,8 @@ public class EntryModule {
     public static final String modid = "dadobugores";
     public static final BaseConfig CONFIG = AutoConfig.register(BaseConfig.class, GsonConfigSerializer::new).getConfig();
     public static final BlocksConfig BLOCKS_CONFIG = AutoConfig.register(BlocksConfig.class, GsonConfigSerializer::new).getConfig();
-    public static final RemapConfig MAPPING_CONFIG = AutoConfig.register(RemapConfig.class, GsonConfigSerializer::new).getConfig();
+    public static final BlockRemapConfig BLOCK_MAPPING_CONFIG = AutoConfig.register(BlockRemapConfig.class, GsonConfigSerializer::new).getConfig();
+    public static final ItemRemapConfig ITEM_MAPPING_CONFIG = AutoConfig.register(ItemRemapConfig.class, GsonConfigSerializer::new).getConfig();
     public static final PropagatorGenDefaults DefaultPropagatorGenConfig = AutoConfig.register(PropagatorGenDefaults.class, GsonConfigSerializer::new).getConfig();
     public static final RegenerativeBlockDefaults DefaultRegenerativeBlockConfig = AutoConfig.register(RegenerativeBlockDefaults.class, GsonConfigSerializer::new).getConfig();
     public static final RegenerativeCoreDefaults DefaultRegenerativeCoreConfig = AutoConfig.register(RegenerativeCoreDefaults.class, GsonConfigSerializer::new).getConfig();

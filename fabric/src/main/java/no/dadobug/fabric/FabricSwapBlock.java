@@ -87,4 +87,16 @@ public class FabricSwapBlock extends Block {
     public boolean isRandomlyTicking(BlockState state) {
         return true;
     }
+
+    @Override
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
+        BlockState swapState = Registry.BLOCK.get(ResourceLocation.tryParse(swapBlock)).defaultBlockState();
+
+        if(swapState.getBlock().equals(Blocks.AIR)) EntryModule.LOGGER.error("Potential default detected with: " + this);
+
+        if(swapState.hasProperty(OresBlockStates.REPLACE_WITH_BLOCK)){
+            swapState.setValue(OresBlockStates.REPLACE_WITH_BLOCK, state.getValue(OresBlockStates.REPLACE_WITH_BLOCK));
+        }
+        world.setBlock(pos, swapState,3);
+    }
 }

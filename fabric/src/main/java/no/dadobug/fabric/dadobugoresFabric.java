@@ -28,34 +28,15 @@ public class dadobugoresFabric implements ModInitializer, ClientModInitializer, 
 
     @Override
     public void onInitialize() {
-        EntryModule.BLOCK_MAPPING_CONFIG.targetMap.forEach(this::registerUnmoddedSwapBlock);
+        EntryModule.BLOCK_MAPPING_CONFIG.targetMap.forEach(this::registerSwapBlock);
+        EntryModule.ITEM_MAPPING_CONFIG.targetMap.forEach(this::registerSwapItem);
     }
-
-    public void registerSwapBlock(String target, String replacement){
-        Registry.register(Registry.BLOCK, new ResourceLocation("dadobugbedrockores", "bedrock_" + target + "_ore"), new FabricSwapBlock(BlockBehaviour.Properties.of(Material.AIR), replacement));
-    }
-
-    public void registerUnmoddedSwapBlock(String target, String replacement){
+    public void registerSwapBlock(String target, String replacement) {
         Registry.register(Registry.BLOCK, new ResourceLocation("dadobugbedrockores", target), new FabricSwapBlock(BlockBehaviour.Properties.of(Material.AIR), replacement));
-    }
-    public void registerSwapBlockSpecial(String target, String replacement){
-        Registry.register(Registry.BLOCK, new ResourceLocation("dadobugbedrockores", "bedrock_" + target), new FabricSwapBlock(BlockBehaviour.Properties.of(Material.AIR), replacement));
+        Registry.register(Registry.ITEM, new ResourceLocation("dadobugbedrockores", target), new FabricSwapItem(new Item.Properties(), replacement));
     }
 
-    public void registerSwapItem(String target, String replacement){
-        Registry.register(Registry.ITEM, new ResourceLocation("dadobugbedrockores", "regenerative_" + target), new FabricSwapItem( new Item.Properties(), replacement));
-    }
-
-    public void registerUnModdedSwapItem(String target, String replacement){
-        Registry.register(Registry.ITEM, new ResourceLocation("dadobugbedrockores", target), new FabricSwapItem( new Item.Properties(), replacement));
-    }
-
-    public void registerPair(String target, String replacementBlock, String replacementItem){
-        registerSwapBlock(target, replacementBlock);
-        registerSwapItem(target, replacementItem);
-    }
-    public void registerSwapBlockSpecial(String target, String replacementBlock, String replacementItem){
-        registerSwapBlock(target, replacementBlock);
-        registerSwapItem(target, replacementItem);
+    public void registerSwapItem(String target, String replacement) {
+        Registry.register(Registry.ITEM, new ResourceLocation("dadobugbedrockores", target), new FabricSwapItem(new Item.Properties(), replacement));
     }
 }

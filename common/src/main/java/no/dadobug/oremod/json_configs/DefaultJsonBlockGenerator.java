@@ -627,10 +627,10 @@ public class DefaultJsonBlockGenerator {
 
 
         BlockList.add(new Pair<>("native_iron_ore", new RegenerativeBlockConfig("native_iron_ore").setReplaceBlockId(Blocks.DEEPSLATE).setEnglishName("Native Iron Ore").setHardness(1.0f).setDurabilityMin(50).setDurabilityMax(200).setStandardTexture(false)
-                .setLootConfig(new RegenerativeOreCustomLootConfig().setSilkable(true).addItemWithRange("minecraft:iron_nugget", 1, 5)).toJsonObject()));
+                .setInfinite(false).setLootConfig(new RegenerativeOreCustomLootConfig().setSilkable(true).addItemWithRange("minecraft:iron_nugget", 1, 5)).toJsonObject()));
 
         BlockList.add(new Pair<>("native_gold_ore", new RegenerativeBlockConfig("native_gold_ore").setReplaceBlockId(Blocks.DEEPSLATE).setEnglishName("Native Gold Ore").setHardness(1.0f).setDurabilityMin(50).setDurabilityMax(200)
-                .setLootConfig(new RegenerativeOreCustomLootConfig().setSilkable(true).addItemWithRange("minecraft:gold_nugget", 1, 5)).toJsonObject()));
+                .setInfinite(false).setLootConfig(new RegenerativeOreCustomLootConfig().setSilkable(true).addItemWithRange("minecraft:gold_nugget", 1, 5)).toJsonObject()));
 
         JsonConfig.writeJsonFiles(BlockList, JsonConfig.block_config_path);
     }

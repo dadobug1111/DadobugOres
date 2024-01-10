@@ -23,10 +23,7 @@ import no.dadobug.oremod.blocks.OresBlockStates;
 import no.dadobug.oremod.configs.PropagatorGenDefaults;
 import no.dadobug.oremod.worldgen.OreGenConfig;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class PropagatorOreGenConfig extends DynamicGenerationConfig {
@@ -74,9 +71,10 @@ public class PropagatorOreGenConfig extends DynamicGenerationConfig {
         if(this.modsRequired.stream().allMatch((mod) -> mod.startsWith("!")?!Platform.isModLoaded(mod.substring(1)):Platform.isModLoaded(mod) || mod.equals("minecraft"))) {
 
             ResourceLocation target = ResourceLocation.tryParse(this.targetBlock);
+            String targetString = this.targetBlock.toLowerCase();
 
             RuleTest test;
-            if (target != null) {
+            if (Arrays.stream(JsonConfig.cancelStrings).noneMatch(s -> s.equals(targetString))) {
                 Block block = Registry.BLOCK.get(target);
                 test = new BlockMatchTest(block);
                 if(block.equals(Blocks.AIR))EntryModule.LOGGER.error(this.id + "defaulted on block match test. Please check key!");

@@ -24,6 +24,7 @@ import no.dadobug.oremod.runtime_data.RuntimeDataLoader;
 import no.dadobug.oremod.worldgen.OreGenConfig;
 import oshi.util.tuples.Triplet;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -89,6 +90,7 @@ public class RegenerativeBlockConfig extends DynamicBlockConfig {
         this.infinite = EntryModule.DefaultRegenerativeBlockConfig.infinite;
         this.silkable = EntryModule.DefaultRegenerativeBlockConfig.silkable;
         this.replace = EntryModule.DefaultRegenerativeBlockConfig.replace;
+        this.onlyValidTools = EntryModule.DefaultRegenerativeBlockConfig.onlyValidTools;
         this.damageFunction = EntryModule.DefaultRegenerativeBlockConfig.damageFunction;
         this.denseOreGenProbability = EntryModule.DefaultRegenerativeBlockConfig.denseOreGenProbability;
         this.replaceBlockId = Registry.BLOCK.getKey(Blocks.AIR).toString();
@@ -296,23 +298,26 @@ public class RegenerativeBlockConfig extends DynamicBlockConfig {
 
     @Override
     public void addBlock(RegistryBox registry) {
-        if(this.modsRequired.stream().allMatch((mod) -> mod.startsWith("!")?!Platform.isModLoaded(mod.substring(1)):Platform.isModLoaded(mod) || mod.equals("minecraft"))) {
+        if(this.modsRequired.stream().allMatch((mod) -> mod.startsWith("!")?!Platform.isModLoaded(mod.substring(1)):(Platform.isModLoaded(mod) || mod.equals("minecraft")))) {
             Supplier<Block> block;
-            if(this.fluid != null ) {
-                if(this.bottleItem != null) {
+
+
+
+            if(this.fluid != null && Arrays.stream(JsonConfig.cancelStrings).noneMatch(s -> s.equals(this.fluid.toLowerCase()))) {
+                if(this.bottleItem != null && Arrays.stream(JsonConfig.cancelStrings).noneMatch(s -> s.equals(this.bottleItem.toLowerCase()))) {
                     block = registry.getBlockRegistry().register(this.id, () -> new RegenerativeFluid(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE).strength(this.hardness, this.resistance).requiresCorrectToolForDrops().lightLevel((state) -> this.luminance), this.replace, Registry.ITEM.get(ResourceLocation.tryParse(this.bottleItem)).getDefaultInstance(), Registry.FLUID.get(ResourceLocation.tryParse(this.fluid)), this.XPmin, this.XPmax, this.durabilityMin, this.durabilityMax, this.infinite, this.silkable, Registry.BLOCK.get(ResourceLocation.tryParse(this.replaceBlockId)).defaultBlockState(), JsonConfig.durabilityFunctions.getOrDefault(this.damageFunction, JsonConfig.defaultFunction), this.onlyValidTools));
                 }else{
                     block = registry.getBlockRegistry().register(this.id, () -> new RegenerativeFluid(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE).strength(this.hardness, this.resistance).requiresCorrectToolForDrops().lightLevel((state) -> this.luminance), this.replace, Registry.FLUID.get(ResourceLocation.tryParse(this.fluid)), this.XPmin, this.XPmax, this.durabilityMin, this.durabilityMax, this.infinite, this.silkable, Registry.BLOCK.get(ResourceLocation.tryParse(this.replaceBlockId)).defaultBlockState(), JsonConfig.durabilityFunctions.getOrDefault(this.damageFunction, JsonConfig.defaultFunction), this.onlyValidTools));
                 }
 
-            }else if(this.bucketItem != null) {
-                if(this.bottleItem != null) {
+            }else if(this.bucketItem != null && Arrays.stream(JsonConfig.cancelStrings).noneMatch(s -> s.equals(this.bucketItem.toLowerCase()))) {
+                if(this.bottleItem != null && Arrays.stream(JsonConfig.cancelStrings).noneMatch(s -> s.equals(this.bottleItem.toLowerCase()))) {
                     block = registry.getBlockRegistry().register(this.id, () -> new RegenerativeFluid(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE).strength(this.hardness, this.resistance).requiresCorrectToolForDrops().lightLevel((state) -> this.luminance), this.replace, Registry.ITEM.get(ResourceLocation.tryParse(this.bottleItem)).getDefaultInstance(), Registry.ITEM.get(ResourceLocation.tryParse(this.bucketItem)).getDefaultInstance(), Registry.SOUND_EVENT.getOptional(ResourceLocation.tryParse(this.bucketSound)), this.XPmin, this.XPmax, this.durabilityMin, this.durabilityMax, this.infinite, this.silkable, Registry.BLOCK.get(ResourceLocation.tryParse(this.replaceBlockId)).defaultBlockState(), JsonConfig.durabilityFunctions.getOrDefault(this.damageFunction, JsonConfig.defaultFunction), this.onlyValidTools));
                 }else{
                     block = registry.getBlockRegistry().register(this.id, () -> new RegenerativeFluid(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE).strength(this.hardness, this.resistance).requiresCorrectToolForDrops().lightLevel((state) -> this.luminance), this.replace, Registry.ITEM.get(ResourceLocation.tryParse(this.bucketItem)).getDefaultInstance(), Registry.SOUND_EVENT.getOptional(ResourceLocation.tryParse(this.bucketSound)), this.XPmin, this.XPmax, this.durabilityMin, this.durabilityMax, this.infinite, this.silkable, Registry.BLOCK.get(ResourceLocation.tryParse(this.replaceBlockId)).defaultBlockState(), JsonConfig.durabilityFunctions.getOrDefault(this.damageFunction, JsonConfig.defaultFunction), this.onlyValidTools));
                 }
 
-            }else if(this.bottleItem != null) {
+            }else if(this.bottleItem != null && Arrays.stream(JsonConfig.cancelStrings).noneMatch(s -> s.equals(this.bottleItem.toLowerCase()))) {
                 block = registry.getBlockRegistry().register(this.id, () -> new RegenerativeFluid(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE).strength(this.hardness, this.resistance).requiresCorrectToolForDrops().lightLevel((state) -> this.luminance), this.replace, Registry.ITEM.get(ResourceLocation.tryParse(this.bottleItem)).getDefaultInstance(), this.XPmin, this.XPmax, this.durabilityMin, this.durabilityMax, this.infinite, this.silkable, Registry.BLOCK.get(ResourceLocation.tryParse(this.replaceBlockId)).defaultBlockState(), JsonConfig.durabilityFunctions.getOrDefault(this.damageFunction, JsonConfig.defaultFunction), this.onlyValidTools));
             }else{
                 block = registry.getBlockRegistry().register(this.id, () -> new RegenerativeBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE).strength(this.hardness, this.resistance).requiresCorrectToolForDrops().lightLevel((state) -> this.luminance), this.replace, this.XPmin, this.XPmax, this.durabilityMin, this.durabilityMax, this.infinite, this.silkable, Registry.BLOCK.get(ResourceLocation.tryParse(this.replaceBlockId)).defaultBlockState(), JsonConfig.durabilityFunctions.getOrDefault(this.damageFunction, JsonConfig.defaultFunction), this.onlyValidTools));

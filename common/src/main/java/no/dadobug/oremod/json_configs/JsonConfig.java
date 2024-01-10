@@ -27,7 +27,7 @@ public class JsonConfig {
     static Jankson JANKSON = Jankson.builder().build();
     public static Map<String, Function<JsonObject, DynamicBlockConfig>> blockTypes = new HashMap<>();
     public static Function<JsonObject, DynamicBlockConfig> regenerativeBlockConfig = blockTypes.put(RegenerativeBlockConfig.type(), RegenerativeBlockConfig::fromJsonObject);
-
+    public static final String[] cancelStrings = {"null", "", "empty", "void", "skip", "no"};
 
     public static Map<String, PropertyDispatch.QuadFunction<Integer, Integer, Integer, RandomSource, Integer>> durabilityFunctions = new HashMap<>();
     public static PropertyDispatch.QuadFunction<Integer, Integer, Integer, RandomSource, Integer> defaultFunction = durabilityFunctions.put("default", (durability, shattering, gentle, random) -> durability - 6 - (shattering> 0 ? 1 : 0) + Math.min(gentle, 5));
@@ -42,6 +42,9 @@ public class JsonConfig {
             return durability;
         }
     });
+
+
+    public static Map<String, Function<JsonObject, DynamicChaosConfig>> chaosTypes = new HashMap<>();
 
 
     public static Map<String, Function<JsonObject, DynamicGenerationConfig>> generationTypes = new HashMap<>();
@@ -59,6 +62,7 @@ public class JsonConfig {
 
     public static Path config_path = Platform.getConfigFolder().resolve(EntryModule.modid);
     public static Path block_config_path = config_path.resolve("blocks");
+    public static Path chaos_config_path = config_path.resolve("chaos");
     public static Path gen_config_path = config_path.resolve("generation");
 
 
@@ -70,42 +74,13 @@ public class JsonConfig {
         return readJsonFiles(blockTypes, block_config_path);
     }
 
+    public static List<DynamicChaosConfig> readChaosConfigs() {
+        return readJsonFiles(chaosTypes, chaos_config_path);
+    }
+
     public static List<DynamicGenerationConfig> readGenerationConfigs() {
         return readJsonFiles(generationTypes, gen_config_path);
     }
-
-    /*
-    public static void inputStringOptional(String id, JsonObject hostJson, Consumer<String> consumer){
-        try{
-            if(hostJson.containsKey(id)) consumer.accept(hostJson.getString(id));
-        }catch(ClassCastException | IllegalStateException ignored){}
-    }
-
-    public static void inputIntOptional(String id, JsonObject hostJson, Consumer<Integer> consumer){
-        try{
-            if(hostJson.containsKey(id)) consumer.accept(hostJson.getInt(id,0));
-        }catch(ClassCastException | IllegalStateException ignored){}
-    }
-
-    public static void inputBooleanOptional(String id, JsonObject hostJson, Consumer<Boolean> consumer){
-        try{
-            if(hostJson.containsKey(id)) consumer.accept(hostJson.get(id).getAsBoolean());
-        }catch(ClassCastException | IllegalStateException ignored){}
-    }
-
-    public static void inputStringArrayOptional(String id, JsonObject hostJson, Consumer<String> consumer) {
-        try{
-            if(hostJson.has(id)){
-                hostJson.get(id).getAsJsonArray().forEach((element) -> {
-                    try {
-                        consumer.accept(element.getAsString());
-                    } catch(ClassCastException | IllegalStateException ignored){}
-                });
-            }
-        }catch(ClassCastException | IllegalStateException ignored){}
-    }
-
-     */
 
     public static <T> List<T> readJsonFiles(Map<String, Function<JsonObject, T>> map, Path path) {
         DirectoryStream<Path> stream;

@@ -71,10 +71,9 @@ public class PropagatorOreGenConfig extends DynamicGenerationConfig {
         if(this.modsRequired.stream().allMatch((mod) -> mod.startsWith("!")?!Platform.isModLoaded(mod.substring(1)):Platform.isModLoaded(mod) || mod.equals("minecraft"))) {
 
             ResourceLocation target = ResourceLocation.tryParse(this.targetBlock);
-            String targetString = this.targetBlock.toLowerCase();
 
             RuleTest test;
-            if (Arrays.stream(JsonConfig.cancelStrings).noneMatch(s -> s.equals(targetString))) {
+            if (Arrays.stream(JsonConfig.cancelStrings).noneMatch(s -> s.equals(targetBlock.toLowerCase()))) {
                 Block block = Registry.BLOCK.get(target);
                 test = new BlockMatchTest(block);
                 if(block.equals(Blocks.AIR))EntryModule.LOGGER.error(this.id + "defaulted on block match test. Please check key!");

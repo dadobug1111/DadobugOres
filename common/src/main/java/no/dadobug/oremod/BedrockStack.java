@@ -2,23 +2,20 @@ package no.dadobug.oremod;
 
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.Fluid;
 import no.dadobug.oremod.blocks.BlockLambda;
 import no.dadobug.oremod.blocks.RegenerativeBlock;
-import no.dadobug.oremod.blocks.RegenerativeFluid;
 import no.dadobug.oremod.configs.BlockConfig;
 import no.dadobug.oremod.configs.BlockConfigLambda;
 import no.dadobug.oremod.json_configs.JsonConfig;
+import no.dadobug.oremod.util.RegenData;
+import no.dadobug.oremod.util.RegenFluidData;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 public final class BedrockStack {
@@ -34,35 +31,13 @@ public final class BedrockStack {
 
 
     public static BedrockStack BedrockStackAlteredBedrock(String name, BlockConfig config, BlockConfigLambda<Item.Properties> itemSettings, BlockConfigLambda<BlockBehaviour.Properties> blockSettings, boolean replaceWithBedrock, MutableComponent toolTip, boolean onlyValidTools) {
-        return new BedrockStack(name, "bedrock_", "", "regenerative_", "", config, itemSettings, blockSettings, replaceWithBedrock, toolTip, (cfg, blocksettings, replace) -> () -> new RegenerativeBlock(blocksettings.get(config), replaceWithBedrock, config.XPmin, config.XPmax, config.DurabilityMin, config.DurabilityMax, config.infinite, false, Blocks.BEDROCK.defaultBlockState(), JsonConfig.defaultFunction, onlyValidTools));
-    }
-
-    public static BedrockStack BedrockStackStandardOre(String name, BlockConfig config, BlockConfigLambda<Item.Properties> itemSettings, BlockConfigLambda<BlockBehaviour.Properties> blockSettings, boolean replaceWithBedrock, MutableComponent toolTip, boolean onlyValidTools) {
-        return new BedrockStack(name, "bedrock_", "_ore", "regenerative_", "", config, itemSettings, blockSettings, replaceWithBedrock, toolTip, (cfg, blocksettings, replace) -> () -> new RegenerativeBlock(blocksettings.get(config), replaceWithBedrock, config.XPmin, config.XPmax, config.DurabilityMin, config.DurabilityMax, config.infinite, false, Blocks.BEDROCK.defaultBlockState(), JsonConfig.defaultFunction, onlyValidTools));
-    }
-
-    public static BedrockStack BedrockStackFluidOre(String name, BlockConfig config, BlockConfigLambda<Item.Properties> itemSettings, BlockConfigLambda<BlockBehaviour.Properties> blockSettings, boolean replaceWithBedrock, MutableComponent toolTip, Fluid fluid, boolean onlyValidTools) {
-        return new BedrockStack(name, "bedrock_", "_ore", "regenerative_", "", config, itemSettings, blockSettings, replaceWithBedrock, toolTip, fluid, onlyValidTools);
-    }
-
-    public static BedrockStack BedrockStackFluidOre(String name, BlockConfig config, BlockConfigLambda<Item.Properties> itemSettings, BlockConfigLambda<BlockBehaviour.Properties> blockSettings, boolean replaceWithBedrock, MutableComponent toolTip, ItemStack bucketIn, Optional<SoundEvent> bucketSoundIn, boolean onlyValidTools) {
-        return new BedrockStack(name, "bedrock_", "_ore", "regenerative_", "", config, itemSettings, blockSettings, replaceWithBedrock, toolTip, bucketIn, bucketSoundIn, onlyValidTools);
+        return new BedrockStack(name, "bedrock_", "", "regenerative_", "", config, itemSettings, blockSettings, replaceWithBedrock, toolTip, (cfg, blocksettings, replace) -> () -> new RegenerativeBlock(blocksettings.get(config), new RegenData(replaceWithBedrock, config.XPmin, config.XPmax, JsonConfig.defaultFunction, config.DurabilityMin, config.DurabilityMax, config.infinite, false, Blocks.BEDROCK.defaultBlockState(), onlyValidTools), new RegenFluidData()));
     }
 
 
     public BedrockStack(String name, String orePrefix, String oreSuffix, String corePrefix, String coreSuffix, BlockConfig config, BlockConfigLambda<Item.Properties> itemSettings, BlockConfigLambda<BlockBehaviour.Properties> blockSettings, boolean replaceWithBedrock, MutableComponent toolTip, BlockLambda<Supplier<Block>> block) {
 
         this.ore = EntryModule.BLOCKS.register(orePrefix + name + oreSuffix, block.get(config, blockSettings, replaceWithBedrock));
-        this.oreItem = EntryModule.ITEMS.register(orePrefix + name + oreSuffix, () -> new BlockItem(this.ore.get(), itemSettings.get(config)));
-        this.core = EntryModule.ITEMS.register(corePrefix + name + coreSuffix, () -> new RegenerativeCore(itemSettings.get(config), this.ore.get(), toolTip));
-    }
-    public BedrockStack(String name, String orePrefix, String oreSuffix, String corePrefix, String coreSuffix, BlockConfig config, BlockConfigLambda<Item.Properties> itemSettings, BlockConfigLambda<BlockBehaviour.Properties> blockSettings, boolean replaceWithBedrock, MutableComponent toolTip, Fluid fluid, boolean onlyValidTools) {
-        this.ore = EntryModule.BLOCKS.register(orePrefix + name + oreSuffix, () -> new RegenerativeFluid(blockSettings.get(config), replaceWithBedrock, fluid, config.XPmin, config.XPmax, config.DurabilityMin, config.DurabilityMax, config.infinite, false, Blocks.BEDROCK.defaultBlockState(), JsonConfig.defaultFunction, onlyValidTools));
-        this.oreItem = EntryModule.ITEMS.register(orePrefix + name + oreSuffix, () -> new BlockItem(this.ore.get(), itemSettings.get(config)));
-        this.core = EntryModule.ITEMS.register(corePrefix + name + coreSuffix, () -> new RegenerativeCore(itemSettings.get(config), this.ore.get(), toolTip));
-    }
-    public BedrockStack(String name, String orePrefix, String oreSuffix, String corePrefix, String coreSuffix, BlockConfig config, BlockConfigLambda<Item.Properties> itemSettings, BlockConfigLambda<BlockBehaviour.Properties> blockSettings, boolean replaceWithBedrock, MutableComponent toolTip, ItemStack bucketIn, Optional<SoundEvent> bucketSoundIn, boolean onlyValidTools) {
-        this.ore = EntryModule.BLOCKS.register(orePrefix + name + oreSuffix, () -> new RegenerativeFluid(blockSettings.get(config), replaceWithBedrock, bucketIn, bucketSoundIn, config.XPmin, config.XPmax, config.DurabilityMin, config.DurabilityMax, config.infinite, false, Blocks.BEDROCK.defaultBlockState(), JsonConfig.defaultFunction, onlyValidTools));
         this.oreItem = EntryModule.ITEMS.register(orePrefix + name + oreSuffix, () -> new BlockItem(this.ore.get(), itemSettings.get(config)));
         this.core = EntryModule.ITEMS.register(corePrefix + name + coreSuffix, () -> new RegenerativeCore(itemSettings.get(config), this.ore.get(), toolTip));
     }

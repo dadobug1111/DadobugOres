@@ -3,20 +3,26 @@ package no.dadobug.oremod.blocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.data.models.blockstates.PropertyDispatch;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BottleItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -25,11 +31,20 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.gameevent.GameEventListener;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.BlockHitResult;
 import no.dadobug.oremod.EntryModule;
+import no.dadobug.oremod.util.RegenData;
+import no.dadobug.oremod.util.RegenFluidData;
 import org.jetbrains.annotations.Nullable;
 
-public class RegenerativeBlock extends BaseEntityBlock {
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+public class RegenerativeBlock extends BaseEntityBlock implements BucketPickup {
     protected final UniformInt experienceDropped;
     protected final IntProvider durabilityProvider;
     protected final PropertyDispatch.QuadFunction<Integer, Integer, Integer, RandomSource, Integer> damageFunction;
@@ -39,38 +54,28 @@ public class RegenerativeBlock extends BaseEntityBlock {
     private boolean onlyValidTools;
 
 
-    public RegenerativeBlock(BlockBehaviour.Properties settings, boolean ReplaceWithBlock, boolean infinite, boolean silk_able, BlockState replaceBlock, PropertyDispatch.QuadFunction<Integer, Integer, Integer, RandomSource, Integer> damageFunction, boolean onlyValidTools) {
-        this(settings, ReplaceWithBlock, UniformInt.of(0, 0), UniformInt.of(1, 1), infinite, silk_able, replaceBlock, damageFunction, onlyValidTools);
-    }
-
-    public RegenerativeBlock(BlockBehaviour.Properties settings, boolean ReplaceWithBlock, IntProvider durabilityProvider, boolean infinite, boolean silk_able, BlockState replaceBlock, PropertyDispatch.QuadFunction<Integer, Integer, Integer, RandomSource, Integer> damageFunction, boolean onlyValidTools) {
-        this(settings, ReplaceWithBlock, UniformInt.of(0, 0), durabilityProvider, infinite, silk_able, replaceBlock, damageFunction, onlyValidTools);
-    }
-
-    public RegenerativeBlock(BlockBehaviour.Properties settings, boolean ReplaceWithBlock, UniformInt experienceDropped, boolean infinite, boolean silk_able, BlockState replaceBlock, PropertyDispatch.QuadFunction<Integer, Integer, Integer, RandomSource, Integer> damageFunction, boolean onlyValidTools) {
-        this(settings, ReplaceWithBlock, experienceDropped, UniformInt.of(1, 1), infinite, silk_able, replaceBlock, damageFunction, onlyValidTools);
-    }
 
 
-    public RegenerativeBlock(BlockBehaviour.Properties settings, boolean ReplaceWithBlock, int XPmin, int XPmax, int DurabilityMin, int DurabilityMax, boolean infinite, boolean silk_able, BlockState replaceBlock, PropertyDispatch.QuadFunction<Integer, Integer, Integer, RandomSource, Integer> damageFunction, boolean onlyValidTools) {
-        this(settings, ReplaceWithBlock, UniformInt.of(XPmin, XPmax), UniformInt.of(DurabilityMin, DurabilityMax), infinite, silk_able, replaceBlock, damageFunction, onlyValidTools);
-    }
+    protected final Fluid fluid;
+    protected final ItemStack bucketItem;
+    protected final ItemStack bottleItem;
+    protected final Optional<SoundEvent> BucketSound;
 
-
-    public RegenerativeBlock(BlockBehaviour.Properties settings, boolean ReplaceWithBlock, int XPmin, int XPmax, IntProvider durabilityProvider, boolean infinite, boolean silk_able, BlockState replaceBlock, PropertyDispatch.QuadFunction<Integer, Integer, Integer, RandomSource, Integer> damageFunction, boolean onlyValidTools) {
-        this(settings, ReplaceWithBlock, UniformInt.of(XPmin, XPmax), durabilityProvider, infinite, silk_able, replaceBlock, damageFunction, onlyValidTools);
-    }
-
-    public RegenerativeBlock(BlockBehaviour.Properties settings, boolean ReplaceWithBlock, UniformInt experienceDropped, IntProvider durabilityProvider, boolean infinite, boolean silk_able, BlockState replaceBlock, PropertyDispatch.QuadFunction<Integer, Integer, Integer, RandomSource, Integer> damageFunction, boolean onlyValidTools){
+    public RegenerativeBlock(BlockBehaviour.Properties settings, RegenData data, RegenFluidData fluidData){
         super(settings);
-        this.experienceDropped = experienceDropped;
-        this.durabilityProvider = durabilityProvider;
-        this.infinite = infinite;
-        this.replaceBlock = replaceBlock;
-        this.silk_able = silk_able;
-        this.damageFunction = damageFunction;
-        this.onlyValidTools = onlyValidTools;
-        registerDefaultState(defaultBlockState().setValue(OresBlockStates.REPLACE_WITH_BLOCK, ReplaceWithBlock));
+        this.experienceDropped = data.getExperienceDropped();
+        this.durabilityProvider = data.getDurabilityProvider();
+        this.infinite = data.isInfinite();
+        this.replaceBlock = data.getReplaceBlock();
+        this.silk_able = data.isSilk_able();
+        this.damageFunction = data.getDamageFunction();
+        this.onlyValidTools = data.isOnlyValidTools();
+        registerDefaultState(defaultBlockState().setValue(OresBlockStates.REPLACE_WITH_BLOCK, data.isReplaceWithBlock()));
+
+        this.fluid = fluidData.getFluid();
+        this.bucketItem = fluidData.getBucketItem();
+        this.bottleItem = fluidData.getBottleItem();
+        this.BucketSound = fluidData.getBucketSound();
     }
 
     public boolean isInfinite() {
@@ -225,5 +230,55 @@ public class RegenerativeBlock extends BaseEntityBlock {
         } else {
             world.removeBlockEntity(pos);
         }
+    }
+
+
+    @Override
+    public ItemStack pickupBlock(LevelAccessor world, BlockPos pos, BlockState state) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof RegenerativeBlockEntity e && !world.isClientSide()) {
+            e.damageBlockFluid(state);
+        }
+        if (this.fluid != Fluids.EMPTY) {
+            return new ItemStack(this.fluid.getBucket());
+        }
+        return this.bucketItem.copy();
+    }
+
+    @Override
+    public Optional<SoundEvent> getPickupSound() {
+        if (this.fluid != Fluids.EMPTY) {
+            return this.fluid.getPickupSound();
+        }
+        return BucketSound;
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) { return this.fluid.defaultFluidState(); }
+
+    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+        state.getFluidState().randomTick(world, pos, random);
+    }
+
+    @Override
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if(this.bottleItem != ItemStack.EMPTY) {
+            AtomicBoolean used = new AtomicBoolean(false);
+            player.getHandSlots().forEach((stack) -> {
+                if (stack.getItem() instanceof BottleItem && !used.get()) {
+                    if(!player.isCreative())stack.shrink(1);
+                    used.set(true);
+                    player.getInventory().add(this.bottleItem.copy());
+                }
+            });
+            if (used.get()) {
+                BlockEntity blockEntity = world.getBlockEntity(pos);
+                if (blockEntity instanceof RegenerativeBlockEntity e && !world.isClientSide()) {
+                    e.damageBlockFluid(state);
+                }
+                return InteractionResult.SUCCESS;
+            }
+        }
+        return super.use(state, world, pos, player, hand, hit);
     }
 }

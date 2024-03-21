@@ -18,9 +18,10 @@ import net.minecraft.world.level.material.MaterialColor;
 import no.dadobug.oremod.EntryModule;
 import no.dadobug.oremod.RegistryBox;
 import no.dadobug.oremod.blocks.RegenerativeBlock;
-import no.dadobug.oremod.blocks.RegenerativeFluid;
 import no.dadobug.oremod.configs.RegenerativeBlockDefaults;
 import no.dadobug.oremod.runtime_data.RuntimeDataLoader;
+import no.dadobug.oremod.util.RegenData;
+import no.dadobug.oremod.util.RegenFluidData;
 import no.dadobug.oremod.worldgen.OreGenConfig;
 import oshi.util.tuples.Triplet;
 
@@ -193,7 +194,7 @@ public class RegenerativeBlockConfig extends DynamicBlockConfig {
 
     public RegenerativeBlockConfig setShowOre(boolean showOre){
 
-        this.replace = showOre;
+        this.showOre = showOre;
         return this;
     }
 
@@ -300,28 +301,33 @@ public class RegenerativeBlockConfig extends DynamicBlockConfig {
     public void addBlock(RegistryBox registry) {
         if(this.modsRequired.stream().allMatch((mod) -> mod.startsWith("!")?!Platform.isModLoaded(mod.substring(1)):(Platform.isModLoaded(mod) || mod.equals("minecraft")))) {
             Supplier<Block> block;
-
-
-
+            RegenData data = new RegenData(this.replace, this.XPmin, this.XPmax, JsonConfig.durabilityFunctions.getOrDefault(this.damageFunction, JsonConfig.defaultFunction), this.durabilityMin, this.durabilityMax, this.infinite, this.silkable, Registry.BLOCK.get(ResourceLocation.tryParse(this.replaceBlockId)).defaultBlockState(), this.onlyValidTools);
+                    
+            RegenFluidData fluidData = null;
             if(this.fluid != null && Arrays.stream(JsonConfig.cancelStrings).noneMatch(s -> s.equals(this.fluid.toLowerCase()))) {
                 if(this.bottleItem != null && Arrays.stream(JsonConfig.cancelStrings).noneMatch(s -> s.equals(this.bottleItem.toLowerCase()))) {
-                    block = registry.getBlockRegistry().register(this.id, () -> new RegenerativeFluid(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE).strength(this.hardness, this.resistance).requiresCorrectToolForDrops().lightLevel((state) -> this.luminance), this.replace, Registry.ITEM.get(ResourceLocation.tryParse(this.bottleItem)).getDefaultInstance(), Registry.FLUID.get(ResourceLocation.tryParse(this.fluid)), this.XPmin, this.XPmax, this.durabilityMin, this.durabilityMax, this.infinite, this.silkable, Registry.BLOCK.get(ResourceLocation.tryParse(this.replaceBlockId)).defaultBlockState(), JsonConfig.durabilityFunctions.getOrDefault(this.damageFunction, JsonConfig.defaultFunction), this.onlyValidTools));
+                    fluidData = new RegenFluidData(Registry.FLUID.get(ResourceLocation.tryParse(this.fluid)), Registry.ITEM.get(ResourceLocation.tryParse(this.bottleItem)).getDefaultInstance());
                 }else{
-                    block = registry.getBlockRegistry().register(this.id, () -> new RegenerativeFluid(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE).strength(this.hardness, this.resistance).requiresCorrectToolForDrops().lightLevel((state) -> this.luminance), this.replace, Registry.FLUID.get(ResourceLocation.tryParse(this.fluid)), this.XPmin, this.XPmax, this.durabilityMin, this.durabilityMax, this.infinite, this.silkable, Registry.BLOCK.get(ResourceLocation.tryParse(this.replaceBlockId)).defaultBlockState(), JsonConfig.durabilityFunctions.getOrDefault(this.damageFunction, JsonConfig.defaultFunction), this.onlyValidTools));
+                    fluidData = new RegenFluidData(Registry.FLUID.get(ResourceLocation.tryParse(this.fluid)));
+
                 }
 
             }else if(this.bucketItem != null && Arrays.stream(JsonConfig.cancelStrings).noneMatch(s -> s.equals(this.bucketItem.toLowerCase()))) {
                 if(this.bottleItem != null && Arrays.stream(JsonConfig.cancelStrings).noneMatch(s -> s.equals(this.bottleItem.toLowerCase()))) {
-                    block = registry.getBlockRegistry().register(this.id, () -> new RegenerativeFluid(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE).strength(this.hardness, this.resistance).requiresCorrectToolForDrops().lightLevel((state) -> this.luminance), this.replace, Registry.ITEM.get(ResourceLocation.tryParse(this.bottleItem)).getDefaultInstance(), Registry.ITEM.get(ResourceLocation.tryParse(this.bucketItem)).getDefaultInstance(), Registry.SOUND_EVENT.getOptional(ResourceLocation.tryParse(this.bucketSound)), this.XPmin, this.XPmax, this.durabilityMin, this.durabilityMax, this.infinite, this.silkable, Registry.BLOCK.get(ResourceLocation.tryParse(this.replaceBlockId)).defaultBlockState(), JsonConfig.durabilityFunctions.getOrDefault(this.damageFunction, JsonConfig.defaultFunction), this.onlyValidTools));
+                    fluidData = new RegenFluidData( Registry.ITEM.get(ResourceLocation.tryParse(this.bucketItem)).getDefaultInstance(), Registry.SOUND_EVENT.getOptional(ResourceLocation.tryParse(this.bucketSound)), Registry.ITEM.get(ResourceLocation.tryParse(this.bottleItem)).getDefaultInstance());
                 }else{
-                    block = registry.getBlockRegistry().register(this.id, () -> new RegenerativeFluid(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE).strength(this.hardness, this.resistance).requiresCorrectToolForDrops().lightLevel((state) -> this.luminance), this.replace, Registry.ITEM.get(ResourceLocation.tryParse(this.bucketItem)).getDefaultInstance(), Registry.SOUND_EVENT.getOptional(ResourceLocation.tryParse(this.bucketSound)), this.XPmin, this.XPmax, this.durabilityMin, this.durabilityMax, this.infinite, this.silkable, Registry.BLOCK.get(ResourceLocation.tryParse(this.replaceBlockId)).defaultBlockState(), JsonConfig.durabilityFunctions.getOrDefault(this.damageFunction, JsonConfig.defaultFunction), this.onlyValidTools));
+                    fluidData = new RegenFluidData( Registry.ITEM.get(ResourceLocation.tryParse(this.bucketItem)).getDefaultInstance(), Registry.SOUND_EVENT.getOptional(ResourceLocation.tryParse(this.bucketSound)));
                 }
 
             }else if(this.bottleItem != null && Arrays.stream(JsonConfig.cancelStrings).noneMatch(s -> s.equals(this.bottleItem.toLowerCase()))) {
-                block = registry.getBlockRegistry().register(this.id, () -> new RegenerativeFluid(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE).strength(this.hardness, this.resistance).requiresCorrectToolForDrops().lightLevel((state) -> this.luminance), this.replace, Registry.ITEM.get(ResourceLocation.tryParse(this.bottleItem)).getDefaultInstance(), this.XPmin, this.XPmax, this.durabilityMin, this.durabilityMax, this.infinite, this.silkable, Registry.BLOCK.get(ResourceLocation.tryParse(this.replaceBlockId)).defaultBlockState(), JsonConfig.durabilityFunctions.getOrDefault(this.damageFunction, JsonConfig.defaultFunction), this.onlyValidTools));
-            }else{
-                block = registry.getBlockRegistry().register(this.id, () -> new RegenerativeBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE).strength(this.hardness, this.resistance).requiresCorrectToolForDrops().lightLevel((state) -> this.luminance), this.replace, this.XPmin, this.XPmax, this.durabilityMin, this.durabilityMax, this.infinite, this.silkable, Registry.BLOCK.get(ResourceLocation.tryParse(this.replaceBlockId)).defaultBlockState(), JsonConfig.durabilityFunctions.getOrDefault(this.damageFunction, JsonConfig.defaultFunction), this.onlyValidTools));
+                fluidData = new RegenFluidData(Registry.ITEM.get(ResourceLocation.tryParse(this.bottleItem)).getDefaultInstance());
+            } else{
+                fluidData = new RegenFluidData();
             }
+
+            RegenFluidData finalFluidData = fluidData;
+            block = registry.getBlockRegistry().register(this.id, () -> new RegenerativeBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE).strength(this.hardness, this.resistance).requiresCorrectToolForDrops().lightLevel((state) -> this.luminance), data, finalFluidData));
+            
             registry.getItemRegistry().register(this.id, () -> new BlockItem(block.get(), this.showOre ? EntryModule.DefaultItemSettings : EntryModule.CloakedItemSettings));
             EntryModule.RegenerativeBlockList.add(block);
 
@@ -552,7 +558,7 @@ public class RegenerativeBlockConfig extends DynamicBlockConfig {
         if(this.coreConfig != null)jsonObject.put("coreConfig", this.coreConfig.toJsonObject());
 
         return jsonObject;
-    };
+    }
 
 
 

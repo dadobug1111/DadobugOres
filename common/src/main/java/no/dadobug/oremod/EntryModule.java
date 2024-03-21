@@ -41,6 +41,8 @@ import no.dadobug.oremod.json_configs.DefaultJsonGenGenerator;
 import no.dadobug.oremod.json_configs.DynamicGenerationConfig;
 import no.dadobug.oremod.json_configs.JsonConfig;
 import no.dadobug.oremod.runtime_data.RuntimeDataLoader;
+import no.dadobug.oremod.util.RegenData;
+import no.dadobug.oremod.util.RegenFluidData;
 import no.dadobug.oremod.worldgen.BedrockOreFeatureConfig;
 import no.dadobug.oremod.worldgen.BedrockOreGenerator;
 import no.dadobug.oremod.worldgen.DenseOreGenerator;
@@ -147,7 +149,7 @@ public class EntryModule {
 
 
     public static final BedrockStack BEDROCK_FRACTURED = BedrockStack.BedrockStackAlteredBedrock("fractured", BLOCKS_CONFIG.BEDROCK_FRACTURED, vanillaItemSettings, DynamicBlockSettings, false, FRACTURED_TOOLTIP, true);
-    public static final RegistrySupplier<Block> BEDROCK_HOLLOW = BLOCKS.register("bedrock_hollow",() -> new HollowBedrock(DynamicBlockSettings.get(BLOCKS_CONFIG.BEDROCK_HOLLOW), false, BLOCKS_CONFIG.BEDROCK_HOLLOW.XPmin, BLOCKS_CONFIG.BEDROCK_HOLLOW.XPmax, BLOCKS_CONFIG.BEDROCK_HOLLOW.DurabilityMin, BLOCKS_CONFIG.BEDROCK_HOLLOW.DurabilityMax, BLOCKS_CONFIG.BEDROCK_HOLLOW.infinite, false, Blocks.BEDROCK.defaultBlockState(), JsonConfig.staticFunction, true));
+    public static final RegistrySupplier<Block> BEDROCK_HOLLOW = BLOCKS.register("bedrock_hollow",() -> new HollowBedrock(DynamicBlockSettings.get(BLOCKS_CONFIG.BEDROCK_HOLLOW), new RegenData(false, BLOCKS_CONFIG.BEDROCK_HOLLOW.XPmin, BLOCKS_CONFIG.BEDROCK_HOLLOW.XPmax, JsonConfig.staticFunction, BLOCKS_CONFIG.BEDROCK_HOLLOW.DurabilityMin, BLOCKS_CONFIG.BEDROCK_HOLLOW.DurabilityMax, BLOCKS_CONFIG.BEDROCK_HOLLOW.infinite, false, Blocks.BEDROCK.defaultBlockState(), true), new RegenFluidData()));
     public static final RegistrySupplier<Item> BEDROCK_HOLLOW_ITEM = ITEMS.register("bedrock_hollow",() -> new BlockItem(BEDROCK_HOLLOW.get(), vanillaItemSettings.get(BLOCKS_CONFIG.BEDROCK_HOLLOW)));
 
 

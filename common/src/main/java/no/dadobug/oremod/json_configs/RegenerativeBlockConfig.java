@@ -47,6 +47,7 @@ public class RegenerativeBlockConfig extends DynamicBlockConfig {
     private int XPmax;
     private boolean standardTexture;
     private boolean bossProof;
+    private boolean immobile;
     private boolean infinite;
     private boolean silkable;
     private boolean replace;
@@ -88,6 +89,7 @@ public class RegenerativeBlockConfig extends DynamicBlockConfig {
         this.XPmax = EntryModule.DefaultRegenerativeBlockConfig.XPmax;
         this.standardTexture = EntryModule.DefaultRegenerativeBlockConfig.standardTexture;
         this.bossProof = EntryModule.DefaultRegenerativeBlockConfig.bossProof;
+        this.immobile = EntryModule.DefaultRegenerativeBlockConfig.immobile;
         this.infinite = EntryModule.DefaultRegenerativeBlockConfig.infinite;
         this.silkable = EntryModule.DefaultRegenerativeBlockConfig.silkable;
         this.replace = EntryModule.DefaultRegenerativeBlockConfig.replace;
@@ -177,6 +179,12 @@ public class RegenerativeBlockConfig extends DynamicBlockConfig {
     public RegenerativeBlockConfig setBossProof(boolean bossProof){
 
         this.bossProof = bossProof;
+        return this;
+    }
+
+    public RegenerativeBlockConfig setImmobile(boolean immobile){
+
+        this.immobile = immobile;
         return this;
     }
 
@@ -341,6 +349,7 @@ public class RegenerativeBlockConfig extends DynamicBlockConfig {
             if (this.coreConfig != null) {
                 this.coreConfig.addItem(registry, block);
                 RuntimeDataLoader.addBlockTag(EntryModule.CORE_TAG.location(), ResourceLocation.tryBuild(EntryModule.modid, this.id));
+                RuntimeDataLoader.addBlockTag(EntryModule.FRACTURE_TAG.location(), ResourceLocation.tryBuild(EntryModule.modid, this.id));
             }
 
             if(!this.validTools.isEmpty()) {
@@ -350,14 +359,18 @@ public class RegenerativeBlockConfig extends DynamicBlockConfig {
             }
 
             if(this.standardTexture){
-                RuntimeDataLoader.addStandardTexture(ResourceLocation.tryBuild(EntryModule.modid, this.id));
+                RuntimeDataLoader.addStandardTexture(ResourceLocation.tryBuild(EntryModule.modid, this.id), block);
             } else if(this.textureClone != null){
-                RuntimeDataLoader.addBlockTexture(ResourceLocation.tryBuild(EntryModule.modid, this.id), this.textureClone);
+                RuntimeDataLoader.addBlockTexture(ResourceLocation.tryBuild(EntryModule.modid, this.id), this.textureClone, block);
             }
 
             if(this.bossProof){
                 RuntimeDataLoader.addBlockTag(BlockTags.WITHER_IMMUNE.location(), ResourceLocation.tryBuild(EntryModule.modid, this.id));
                 RuntimeDataLoader.addBlockTag(BlockTags.DRAGON_IMMUNE.location(), ResourceLocation.tryBuild(EntryModule.modid, this.id));
+            }
+
+            if(this.immobile){
+                RuntimeDataLoader.addBlockTag(EntryModule.IMMOBILE_TAG.location(), ResourceLocation.tryBuild(EntryModule.modid, this.id));
             }
 
             if(this.englishName != null){
@@ -377,6 +390,8 @@ public class RegenerativeBlockConfig extends DynamicBlockConfig {
                     RuntimeDataLoader.addBlockTag(ResourceLocation.tryBuild("forge", "needs_netherite_tool"), ResourceLocation.tryBuild(EntryModule.modid, this.id));
                 }
             }
+
+            RuntimeDataLoader.addBlockTag(EntryModule.REGEN_TAG.location(), ResourceLocation.tryBuild(EntryModule.modid, this.id));
 
             EntryModule.LOGGER.debug("regenerative block added: " + this.id);
 
@@ -428,6 +443,7 @@ public class RegenerativeBlockConfig extends DynamicBlockConfig {
 
                 .setStandardTexture(jsonObject.getBoolean("standardTexture", EntryModule.DefaultRegenerativeBlockConfig.standardTexture))
                 .setBossProof(jsonObject.getBoolean("bossProof", EntryModule.DefaultRegenerativeBlockConfig.bossProof))
+                .setImmobile(jsonObject.getBoolean("immobile", EntryModule.DefaultRegenerativeBlockConfig.immobile))
                 .setInfinite(jsonObject.getBoolean("infinite", EntryModule.DefaultRegenerativeBlockConfig.infinite))
                 .setSilkable(jsonObject.getBoolean("silkable", EntryModule.DefaultRegenerativeBlockConfig.silkable))
                 .setShowOre(jsonObject.getBoolean("showOre", EntryModule.DefaultRegenerativeBlockConfig.showOre))
@@ -536,6 +552,7 @@ public class RegenerativeBlockConfig extends DynamicBlockConfig {
         if(this.luminance != defaultstuff.luminance)jsonObject.put("luminance", new JsonPrimitive(this.luminance));
         if(this.standardTexture != defaultstuff.standardTexture)jsonObject.put("standardTexture", new JsonPrimitive(this.standardTexture));
         if(this.bossProof != defaultstuff.bossProof)jsonObject.put("bossProof", new JsonPrimitive(this.bossProof));
+        if(this.immobile != defaultstuff.immobile)jsonObject.put("immobile", new JsonPrimitive(this.immobile));
         if(this.infinite != defaultstuff.infinite)jsonObject.put("infinite", new JsonPrimitive(this.infinite));
         if(this.silkable != defaultstuff.silkable)jsonObject.put("silkable", new JsonPrimitive(this.silkable));
         if(this.showOre != defaultstuff.showOre)jsonObject.put("showOre", new JsonPrimitive(this.showOre));

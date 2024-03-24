@@ -130,7 +130,8 @@ public class RegenerativeBlock extends BaseEntityBlock implements BucketPickup {
 
     @Override
     public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.BLOCK;
+        if(state.is(EntryModule.IMMOBILE_TAG))return PushReaction.BLOCK;
+        else return super.getPistonPushReaction(state);
     }
 
     @Override

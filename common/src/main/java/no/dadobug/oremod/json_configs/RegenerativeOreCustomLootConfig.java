@@ -13,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
 import net.minecraft.world.level.storage.loot.functions.CopyNbtFunction;
@@ -92,6 +93,8 @@ public class RegenerativeOreCustomLootConfig extends DynamicLootConfig{
                 notEnchantment(builder, EntryModule.CURSE_OF_FRACTURING.get());
                 ResourceLocation host = ResourceLocation.tryBuild(EntryModule.modid, hostID);
 
+                LootTable.Builder tableBuilder = new LootTable.Builder();
+
                 this.itemSet.forEach((itemPair) -> {
                     try {
                         String mod = Objects.requireNonNull(ResourceLocation.tryParse(itemPair.getFirst())).getNamespace();
@@ -115,7 +118,7 @@ public class RegenerativeOreCustomLootConfig extends DynamicLootConfig{
                     yesEnchantment(silkBuilder, Enchantments.SILK_TOUCH);
                     silkBuilder.add(LootItem.lootTableItem(Registry.ITEM.get(host)).apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("durability", "BlockEntityTag.durability", CopyNbtFunction.MergeStrategy.REPLACE)));
 
-                    RuntimeDataLoader.addLootTable(host, silkBuilder);
+                    tableBuilder.withPool(silkBuilder);
 
                 }
 
@@ -133,13 +136,14 @@ public class RegenerativeOreCustomLootConfig extends DynamicLootConfig{
                         yesEnchantment(arcExtractBuilder, EntryModule.ARCANE_EXTRACTION.get());
                         arcExtractBuilder.add(LootItem.lootTableItem(Registry.ITEM.get(host))).apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("durability", "BlockEntityTag.durability", CopyNbtFunction.MergeStrategy.REPLACE));
 
-                        RuntimeDataLoader.addLootTable(host, arcExtractBuilder);
+                        tableBuilder.withPool(arcExtractBuilder);
                     }
 
-                    RuntimeDataLoader.addLootTable(host, extractBuilder);
+                    tableBuilder.withPool(extractBuilder);
 
                 }
-                RuntimeDataLoader.addLootTable(host, builder);
+                tableBuilder.withPool(builder);
+                RuntimeDataLoader.addLootTable(host, tableBuilder);
             }
         });
 

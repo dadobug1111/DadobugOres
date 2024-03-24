@@ -627,10 +627,10 @@ public class DefaultJsonBlockGenerator {
 
 
         BlockList.add(new Pair<>("native_iron_ore", new RegenerativeBlockConfig("native_iron_ore").setReplaceBlockId(Blocks.DEEPSLATE).setEnglishName("Native Iron Ore").setHardness(1.0f).setDurabilityMin(50).setDurabilityMax(200).setStandardTexture(false)
-                .setToolLevel(2).setInfinite(false).setLootConfig(new RegenerativeOreCustomLootConfig().setSilkable(true).addItemWithRange("minecraft:iron_nugget", 1, 5)).toJsonObject()));
+                .setToolLevel(2).setInfinite(false).setImmobile(false).setLootConfig(new RegenerativeOreCustomLootConfig().setSilkable(true).addItemWithRange("minecraft:iron_nugget", 1, 5)).toJsonObject()));
 
         BlockList.add(new Pair<>("native_gold_ore", new RegenerativeBlockConfig("native_gold_ore").setReplaceBlockId(Blocks.DEEPSLATE).setEnglishName("Native Gold Ore").setHardness(1.0f).setDurabilityMin(50).setDurabilityMax(200)
-                .setToolLevel(2).setInfinite(false).setLootConfig(new RegenerativeOreCustomLootConfig().setSilkable(true).addItemWithRange("minecraft:gold_nugget", 1, 5)).toJsonObject()));
+                .setToolLevel(2).setInfinite(false).setImmobile(false).setLootConfig(new RegenerativeOreCustomLootConfig().setSilkable(true).addItemWithRange("minecraft:gold_nugget", 1, 5)).toJsonObject()));
 
         JsonConfig.writeJsonFiles(BlockList, JsonConfig.block_config_path);
     }
@@ -662,7 +662,7 @@ public class DefaultJsonBlockGenerator {
         densify(list, targetDeepOre, "deepslate_" + idSnippit + "_ore", targetMod, "Dense Deepslate " + nameSnippit + " Ore", Blocks.DEEPSLATE, 4.5f, toolLevel);
     }
     public static void densify(List<Pair<String, JsonObject>> list, String targetOre, String targetMod, String name, Block hostStone, String texture, float probability, int xpMin, int xpMax, float hardness, int toolLevel){
-        list.add(new Pair<>("dense_" + targetOre, new RegenerativeBlockConfig("dense_" + targetOre).addRequiredMod(targetMod).setReplaceBlockId(hostStone).setEnglishName(name).setStandardTexture(false).setTextureClone(texture).setInfinite(false)
+        list.add(new Pair<>("dense_" + targetOre, new RegenerativeBlockConfig("dense_" + targetOre).addRequiredMod(targetMod).setReplaceBlockId(hostStone).setEnglishName(name).setStandardTexture(false).setTextureClone(texture).setInfinite(false).setImmobile(false)
                 .setSilkable(true).setReplace(true).setXPmin(xpMin).setXPmax(xpMax).setLuminance(2).setDenseOreGenTarget(targetMod + ":" + targetOre).setDenseOreGenProbability(probability).setHardness(hardness).setToolLevel(toolLevel).setOnlyValidTools(false)
                 .setLootConfig(new RegenerativeOreLootConfig().addOre(targetMod + ":" + targetOre).setSilkable(true)).toJsonObject()));
     }
@@ -688,7 +688,7 @@ public class DefaultJsonBlockGenerator {
     }
 
     public static void densify(List<Pair<String, JsonObject>> list, String targetOre, String targetMod, String name, String hostStone, String texture, float probability, int xpMin, int xpMax, float hardness, int toolLevel){
-        list.add(new Pair<>("dense_" + targetOre, new RegenerativeBlockConfig("dense_" + targetOre).addRequiredMod(targetMod).setReplaceBlockId(hostStone).setEnglishName(name).setStandardTexture(false).setTextureClone(texture).setInfinite(false)
+        list.add(new Pair<>("dense_" + targetOre, new RegenerativeBlockConfig("dense_" + targetOre).addRequiredMod(targetMod).setReplaceBlockId(hostStone).setEnglishName(name).setStandardTexture(false).setTextureClone(texture).setInfinite(false).setImmobile(false)
                 .setSilkable(true).setReplace(true).setXPmin(xpMin).setXPmax(xpMax).setLuminance(2).setDenseOreGenTarget(targetMod + ":" + targetOre).setDenseOreGenProbability(probability).setHardness(hardness).setToolLevel(toolLevel).setOnlyValidTools(false)
                 .setLootConfig(new RegenerativeOreLootConfig().addOre(targetMod + ":" + targetOre).setSilkable(true)).toJsonObject()));
     }
@@ -708,7 +708,7 @@ public class DefaultJsonBlockGenerator {
 
 
     public static void densify(List<Pair<String, JsonObject>> list, String targetOre, String id, String targetMod, String name, Block hostStone, String texture, float probability, int xpMin, int xpMax, float hardness, int toolLevel){
-        list.add(new Pair<>("dense_" + id, new RegenerativeBlockConfig("dense_" + id).addRequiredMod(targetMod).setReplaceBlockId(hostStone).setEnglishName(name).setStandardTexture(false).setTextureClone(texture).setInfinite(false)
+        list.add(new Pair<>("dense_" + id, new RegenerativeBlockConfig("dense_" + id).addRequiredMod(targetMod).setReplaceBlockId(hostStone).setEnglishName(name).setStandardTexture(false).setTextureClone(texture).setInfinite(false).setImmobile(false)
                 .setSilkable(true).setReplace(true).setXPmin(xpMin).setXPmax(xpMax).setLuminance(2).setDenseOreGenTarget(targetMod + ":" + targetOre).setDenseOreGenProbability(probability).setHardness(hardness).setToolLevel(toolLevel).setOnlyValidTools(false)
                 .setLootConfig(new RegenerativeOreLootConfig().addOre(targetMod + ":" + targetOre).setSilkable(true)).toJsonObject()));
     }
@@ -734,7 +734,7 @@ public class DefaultJsonBlockGenerator {
     }
 
     public static void densify(List<Pair<String, JsonObject>> list, String targetOre, String id, String targetMod, String name, String hostStone, String texture, float probability, int xpMin, int xpMax, float hardness, int toolLevel){
-        list.add(new Pair<>("dense_" + id, new RegenerativeBlockConfig("dense_" + id).addRequiredMod(targetMod).setReplaceBlockId(hostStone).setEnglishName(name).setStandardTexture(false).setTextureClone(texture).setInfinite(false)
+        list.add(new Pair<>("dense_" + id, new RegenerativeBlockConfig("dense_" + id).addRequiredMod(targetMod).setReplaceBlockId(hostStone).setEnglishName(name).setStandardTexture(false).setTextureClone(texture).setInfinite(false).setImmobile(false)
                 .setSilkable(true).setReplace(true).setXPmin(xpMin).setXPmax(xpMax).setLuminance(2).setDenseOreGenTarget(targetMod + ":" + targetOre).setDenseOreGenProbability(probability).setHardness(hardness).setToolLevel(toolLevel).setOnlyValidTools(false)
                 .setLootConfig(new RegenerativeOreLootConfig().addOre(targetMod + ":" + targetOre).setSilkable(true)).toJsonObject()));
     }

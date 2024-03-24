@@ -90,6 +90,7 @@ public class EntryModule {
     public static TagKey<Block> HOLLOW_TAG = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation("dadobugores", "can_accept_core"));
     public static TagKey<Block> INDESTRUCTABLE_TAG = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation("dadobugores", "no_break"));
     public static TagKey<Block> ENCHANT_ONLY_TAG = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation("dadobugores", "enchant_break"));
+    public static TagKey<Block> IMMOBILE_TAG = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation("dadobugores", "immobile"));
 
     public static TagKey<Item> IS_CORE_TAG = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation("dadobugores", "is_core"));
 
@@ -163,21 +164,19 @@ public class EntryModule {
         BLOCK_ENTITY_TYPES.register();
         FEATURES.register();
 
-        if(isClient) RuntimeDataLoader.provider.register();
-        RuntimeDataLoader.providerServer.register();
+        RuntimeDataLoader.init();
     }
 
     public static void initLate(boolean isClient) {
-        //ArrayList<JsonObject> object = new ArrayList<>();
-        //builder.offerTo((RecipeJsonProviderA) -> object.add(RecipeJsonProviderA.toJson()));
         EntryModule.MOD_LOOT_CONDITION_TYPE = Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(EntryModule.modid, "modloaded"), new LootItemConditionType(new ModLoadedLootCondition.Serializer()));
-
 
 
         JsonConfig.readGenerationConfigs().forEach(DynamicGenerationConfig::addGeneration);
         lootFunctions.forEach((a) -> a.accept(true));
-        RuntimeDataLoader.init();
+
+        RuntimeDataLoader.denseGenInit();
         OreGenConfig.init();
+
         if(isClient) {
             ColorHandlerRegistry.registerBlockColors((state, world, pos, tintIndex) -> {
                 if (world == null || pos == null) {

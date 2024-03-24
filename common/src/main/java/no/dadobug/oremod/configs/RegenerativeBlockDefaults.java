@@ -20,6 +20,7 @@ public class RegenerativeBlockDefaults implements ConfigData {
     public int XPmax = 0;
     public boolean standardTexture = true;
     public boolean bossProof = true;
+    public boolean immobile = true;
     public boolean infinite = true;
     public boolean silkable = false;
     public boolean replace = false;

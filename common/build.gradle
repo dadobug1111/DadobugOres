@@ -7,8 +7,8 @@ dependencies {
 
     modApi "me.shedaniel.cloth:cloth-config:${rootProject.cloth_version}"
 
-
-    modImplementation "curse.maven:selene-499980:4491268"
+    modImplementation "pers.solid:brrp-fabric:${rootProject.brrp_version}-${rootProject.minecraft_version}"
+    //modImplementation "curse.maven:selene-499980:4983975"
 }
 
 architectury {

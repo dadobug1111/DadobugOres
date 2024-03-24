@@ -30,7 +30,8 @@ dependencies {
     modApi "dev.architectury:architectury-forge:${rootProject.architectury_version}"
     modApi "me.shedaniel.cloth:cloth-config-forge:${rootProject.cloth_version}"
 
-    modImplementation "curse.maven:selene-499980:4491267"
+    modImplementation "pers.solid:brrp-forge:${rootProject.brrp_version}-${rootProject.minecraft_version}"
+    //modImplementation "curse.maven:selene-499980:4983974"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }

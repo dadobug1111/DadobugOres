@@ -310,9 +310,12 @@ public class RegenerativeBlockConfig extends DynamicBlockConfig {
         if(this.modsRequired.stream().allMatch((mod) -> mod.startsWith("!")?!Platform.isModLoaded(mod.substring(1)):(Platform.isModLoaded(mod) || mod.equals("minecraft")))) {
             Supplier<Block> block;
             RegenData data = new RegenData(this.replace, this.XPmin, this.XPmax, JsonConfig.durabilityFunctions.getOrDefault(this.damageFunction, JsonConfig.defaultFunction), this.durabilityMin, this.durabilityMax, this.infinite, this.silkable, Registry.BLOCK.get(ResourceLocation.tryParse(this.replaceBlockId)).defaultBlockState(), this.onlyValidTools);
-                    
-            RegenFluidData fluidData = null;
+
+            BlockBehaviour.Properties properties = BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE).strength(this.hardness, this.resistance).requiresCorrectToolForDrops().lightLevel((state) -> this.luminance);
+
+            RegenFluidData fluidData;
             if(this.fluid != null && Arrays.stream(JsonConfig.cancelStrings).noneMatch(s -> s.equals(this.fluid.toLowerCase()))) {
+                properties.randomTicks();
                 if(this.bottleItem != null && Arrays.stream(JsonConfig.cancelStrings).noneMatch(s -> s.equals(this.bottleItem.toLowerCase()))) {
                     fluidData = new RegenFluidData(Registry.FLUID.get(ResourceLocation.tryParse(this.fluid)), Registry.ITEM.get(ResourceLocation.tryParse(this.bottleItem)).getDefaultInstance());
                 }else{
@@ -334,6 +337,8 @@ public class RegenerativeBlockConfig extends DynamicBlockConfig {
             }
 
             RegenFluidData finalFluidData = fluidData;
+
+
             block = registry.getBlockRegistry().register(this.id, () -> new RegenerativeBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE).strength(this.hardness, this.resistance).requiresCorrectToolForDrops().lightLevel((state) -> this.luminance), data, finalFluidData));
             
             registry.getItemRegistry().register(this.id, () -> new BlockItem(block.get(), this.showOre ? EntryModule.DefaultItemSettings : EntryModule.CloakedItemSettings));

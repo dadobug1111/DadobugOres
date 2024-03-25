@@ -37,7 +37,7 @@ public class RuntimeDataLoader {
 
 
     public static void addLootTable(ResourceLocation id, LootTable.Builder table){
-        provider.addLootTable(id, table);
+        provider.addLootTable(id.brrp_prefixed("blocks/"), table);
     }
     public static void addBlockTag(ResourceLocation tag, ResourceLocation block){
         if(tagSet.stream().noneMatch((builder) -> {
@@ -122,6 +122,7 @@ public class RuntimeDataLoader {
         ResourceLocation fractured = EntryModule.BEDROCK_FRACTURED.ore().getId();
         addStandardTexture(fractured, EntryModule.BEDROCK_FRACTURED.ore());
 
+        addBlockTag(EntryModule.FRACTURE_SOURCE_TAG.location(), fractured);
         addBlockTag(EntryModule.CORE_TAG.location(), fractured);
         addBlockTag(EntryModule.REGEN_TAG.location(), fractured);
         addBlockTag(BlockTags.WITHER_IMMUNE.location(), fractured);

@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import no.dadobug.oremod.blocks.BlockLambda;
-import no.dadobug.oremod.blocks.RegenerativeBlock;
+import no.dadobug.oremod.blocks.FracturedBedrock;
 import no.dadobug.oremod.configs.BlockConfig;
 import no.dadobug.oremod.configs.BlockConfigLambda;
 import no.dadobug.oremod.json_configs.JsonConfig;
@@ -31,7 +31,7 @@ public final class BedrockStack {
 
 
     public static BedrockStack BedrockStackAlteredBedrock(String name, BlockConfig config, BlockConfigLambda<Item.Properties> itemSettings, BlockConfigLambda<BlockBehaviour.Properties> blockSettings, boolean replaceWithBedrock, MutableComponent toolTip, boolean onlyValidTools) {
-        return new BedrockStack(name, "bedrock_", "", "regenerative_", "", config, itemSettings, blockSettings, replaceWithBedrock, toolTip, (cfg, blocksettings, replace) -> () -> new RegenerativeBlock(blocksettings.get(config), new RegenData(replaceWithBedrock, config.XPmin, config.XPmax, JsonConfig.defaultFunction, config.DurabilityMin, config.DurabilityMax, config.infinite, false, Blocks.BEDROCK.defaultBlockState(), onlyValidTools), new RegenFluidData()));
+        return new BedrockStack(name, "bedrock_", "", "regenerative_", "", config, itemSettings, blockSettings, replaceWithBedrock, toolTip, (cfg, blocksettings, replace) -> () -> new FracturedBedrock(blocksettings.get(config), new RegenData(replaceWithBedrock, config.XPmin, config.XPmax, JsonConfig.defaultFunction, config.DurabilityMin, config.DurabilityMax, config.infinite, false, Blocks.BEDROCK.defaultBlockState(), onlyValidTools), new RegenFluidData()));
     }
 
 

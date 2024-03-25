@@ -32,6 +32,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguratio
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
+import no.dadobug.oremod.blocks.FracturedBedrockEntity;
 import no.dadobug.oremod.blocks.HollowBedrock;
 import no.dadobug.oremod.blocks.RegenerativeBlockEntity;
 import no.dadobug.oremod.configs.*;
@@ -78,7 +79,7 @@ public class EntryModule {
             new ItemStack(Registry.BLOCK.get(new ResourceLocation(modid, "bedrock_diamond_ore"))));
 
 
-    public static final BlockConfigLambda<BlockBehaviour.Properties> DynamicBlockSettings = (cfg) -> BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE).strength(cfg.hardness, cfg.resistance).requiresCorrectToolForDrops().lightLevel((state) -> cfg.luminance);
+    public static final BlockConfigLambda<BlockBehaviour.Properties> DynamicBlockSettings = (cfg) -> BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE).strength(cfg.hardness, cfg.resistance).randomTicks().requiresCorrectToolForDrops().lightLevel((state) -> cfg.luminance);
     public static final Item.Properties DefaultItemSettings = new Item.Properties().tab(EntryModule.ITEMGROUP);
     public static final Item.Properties CloakedItemSettings = new Item.Properties();
     public static final BlockConfigLambda<Item.Properties> vanillaItemSettings = (cfg) -> cfg.showOre?DefaultItemSettings:CloakedItemSettings;
@@ -86,6 +87,7 @@ public class EntryModule {
 
     public static TagKey<Block> REGEN_TAG = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation("dadobugores", "regenerative_block"));
     public static TagKey<Block> FRACTURE_TAG = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation("dadobugores", "fracture-able_block"));
+    public static TagKey<Block> FRACTURE_SOURCE_TAG = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation("dadobugores", "fractured_block"));
     public static TagKey<Block> CORE_TAG = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation("dadobugores", "contains_core"));
     public static TagKey<Block> HOLLOW_TAG = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation("dadobugores", "can_accept_core"));
     public static TagKey<Block> INDESTRUCTABLE_TAG = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation("dadobugores", "no_break"));
@@ -115,6 +117,7 @@ public class EntryModule {
 
 
 
+    public static final DeferredRegister<Block> REGENERATIVE_BLOCKS = DeferredRegister.create(modid, Registry.BLOCK_REGISTRY);
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(modid, Registry.BLOCK_REGISTRY);
     public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(modid, Registry.FEATURE_REGISTRY);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(modid, Registry.ITEM_REGISTRY);
@@ -123,7 +126,7 @@ public class EntryModule {
 
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(modid, Registry.BLOCK_ENTITY_TYPE_REGISTRY);
     public static final ArrayList<Supplier<Block>> RegenerativeBlockList = new ArrayList<>();
-    public static final RegistryBox registryBox = new RegistryBox(BLOCKS, ITEMS);
+    public static final RegistryBox registryBox = new RegistryBox(REGENERATIVE_BLOCKS, ITEMS);
     public static final ArrayList<Consumer<Boolean>> lootFunctions = new ArrayList<>();
 
 
@@ -137,7 +140,7 @@ public class EntryModule {
         JsonConfig.readBlockConfigs().forEach((config) -> config.addBlock(registryBox));
     }
 
-    public static RegistrySupplier<BlockEntityType<RegenerativeBlockEntity>> REGENERATIVEBLOCKTYPE = BLOCK_ENTITY_TYPES.register("", () -> {
+    public static RegistrySupplier<BlockEntityType<RegenerativeBlockEntity>> REGENERATIVEBLOCKTYPE = BLOCK_ENTITY_TYPES.register("regenerative_block_entity", () -> {
         Block[] blocks = new Block[RegenerativeBlockList.size()];
         for(int i = 0;i < blocks.length; i++){
             blocks[i] = RegenerativeBlockList.get(i).get();
@@ -145,12 +148,15 @@ public class EntryModule {
         return BlockEntityType.Builder.of(RegenerativeBlockEntity::new, blocks).build(null);
     });
 
+
     public static final RegistrySupplier<Feature<BedrockOreFeatureConfig>> BEDROCK_ORE_GENERATOR = FEATURES.register("bedrock_ore_generator",() -> new BedrockOreGenerator(BedrockOreFeatureConfig.CODEC));
     public static final RegistrySupplier<Feature<OreConfiguration>> DENSE_ORE_GENERATOR = FEATURES.register("dense_ore_generator",() -> new DenseOreGenerator(OreConfiguration.CODEC));
 
 
     public static final BedrockStack BEDROCK_FRACTURED = BedrockStack.BedrockStackAlteredBedrock("fractured", BLOCKS_CONFIG.BEDROCK_FRACTURED, vanillaItemSettings, DynamicBlockSettings, false, FRACTURED_TOOLTIP, true);
-    public static final RegistrySupplier<Block> BEDROCK_HOLLOW = BLOCKS.register("bedrock_hollow",() -> new HollowBedrock(DynamicBlockSettings.get(BLOCKS_CONFIG.BEDROCK_HOLLOW), new RegenData(false, BLOCKS_CONFIG.BEDROCK_HOLLOW.XPmin, BLOCKS_CONFIG.BEDROCK_HOLLOW.XPmax, JsonConfig.staticFunction, BLOCKS_CONFIG.BEDROCK_HOLLOW.DurabilityMin, BLOCKS_CONFIG.BEDROCK_HOLLOW.DurabilityMax, BLOCKS_CONFIG.BEDROCK_HOLLOW.infinite, false, Blocks.BEDROCK.defaultBlockState(), true), new RegenFluidData()));
+
+    public static RegistrySupplier<BlockEntityType<FracturedBedrockEntity>> FRACTUREDBLOCKTYPE = BLOCK_ENTITY_TYPES.register("fractured_bedrock_entity", () -> BlockEntityType.Builder.of(FracturedBedrockEntity::new, BEDROCK_FRACTURED.ore().get()).build(null));
+    public static final RegistrySupplier<Block> BEDROCK_HOLLOW = REGENERATIVE_BLOCKS.register("bedrock_hollow",() -> new HollowBedrock(DynamicBlockSettings.get(BLOCKS_CONFIG.BEDROCK_HOLLOW), new RegenData(false, BLOCKS_CONFIG.BEDROCK_HOLLOW.XPmin, BLOCKS_CONFIG.BEDROCK_HOLLOW.XPmax, JsonConfig.staticFunction, BLOCKS_CONFIG.BEDROCK_HOLLOW.DurabilityMin, BLOCKS_CONFIG.BEDROCK_HOLLOW.DurabilityMax, BLOCKS_CONFIG.BEDROCK_HOLLOW.infinite, false, Blocks.BEDROCK.defaultBlockState(), true), new RegenFluidData()));
     public static final RegistrySupplier<Item> BEDROCK_HOLLOW_ITEM = ITEMS.register("bedrock_hollow",() -> new BlockItem(BEDROCK_HOLLOW.get(), vanillaItemSettings.get(BLOCKS_CONFIG.BEDROCK_HOLLOW)));
 
 
@@ -159,6 +165,7 @@ public class EntryModule {
 
     public static void init(boolean isClient) {
         ENCHANTS.register();
+        REGENERATIVE_BLOCKS.register();
         BLOCKS.register();
         ITEMS.register();
         BLOCK_ENTITY_TYPES.register();

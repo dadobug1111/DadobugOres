@@ -43,6 +43,14 @@ public class RegenerativeBlockEntity extends BlockEntity {
         }
     }
 
+
+
+    public void setDurability(int durability){
+        EntryModule.LOGGER.debug("setDurability");
+        this.durability = durability;
+        this.setChanged();
+    }
+
     public BlockState getKeepstate() {
         return this.keepstate;
     }

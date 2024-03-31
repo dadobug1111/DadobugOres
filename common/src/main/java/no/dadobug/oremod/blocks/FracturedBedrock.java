@@ -35,7 +35,7 @@ public class FracturedBedrock extends RegenerativeBlock{
 
 
         switch(random.nextInt(1, 10)){
-            case 1, 2, 3, 4, 5 -> {
+            case 1, 2, 3, 4, 5, 6, 7 -> {
                 for (byte i = 0; i<random.nextInt(1, 4); i++) {
                     BlockPos breakPos = new BlockPos(pos.getX() -2 + random.nextInt(5), pos.getY() -2 + random.nextInt(5), pos.getZ() -2 + random.nextInt(5));
                     BlockState breakState = level.getBlockState(breakPos);
@@ -59,7 +59,7 @@ public class FracturedBedrock extends RegenerativeBlock{
                 }
             }
 
-            case 6, 7 -> {
+            case 8, 9, 10 -> {
                 BlockPos movePos1 = new BlockPos(pos.getX() -2 + random.nextInt(5), pos.getY() -2 + random.nextInt(5), pos.getZ() -2 + random.nextInt(5));
                 BlockPos movePos2 = new BlockPos(pos.getX() -2 + random.nextInt(5), pos.getY() -2 + random.nextInt(5), pos.getZ() -2 + random.nextInt(5));
                 BlockState moveState1 = level.getBlockState(movePos1);

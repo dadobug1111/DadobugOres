@@ -31,6 +31,8 @@ public class BedrockOreGenerator extends Feature<BedrockOreFeatureConfig> {
         RandomSource random = context.random();
         List<BedrockOreFeatureConfig.Target> targets = config.targets;
 
+        boolean hidden = worldLayer.equals(BedrockOreFeatureConfig.WorldLayer.HIDDEN);
+
         int x = origin.getX();
         int y = origin.getY();
         int z = origin.getZ();
@@ -38,7 +40,7 @@ public class BedrockOreGenerator extends Feature<BedrockOreFeatureConfig> {
 
         BlockPos newOrigin;
         //find the bedrock
-        if(!worldLayer.equals(BedrockOreFeatureConfig.WorldLayer.ALL)) {
+        if(!worldLayer.equals(BedrockOreFeatureConfig.WorldLayer.ALL) && !hidden) {
             for (byte yIndex = 0; yIndex < 5; yIndex++) {
                 for (int xIndex = 0; xIndex < 1 + (maxDistanceFromOrigin * 2); xIndex++) {
                     for (int zIndex = 0; zIndex < 1 + (maxDistanceFromOrigin * 2); zIndex++) {
@@ -76,7 +78,7 @@ public class BedrockOreGenerator extends Feature<BedrockOreFeatureConfig> {
         if (targets.stream().noneMatch((target) -> {
             targetsArrayList.add(new Pair<>(target.target, target.state));
             if (target.target.test(world.getBlockState(newOrigin), random)) {
-                world.setBlock(newOrigin, target.state, 3);
+                if(!(hidden && isAdjacentToAir(world::getBlockState, newOrigin)))world.setBlock(newOrigin, target.state, 3);
                 return true;
             }
             return false;
@@ -90,7 +92,7 @@ public class BedrockOreGenerator extends Feature<BedrockOreFeatureConfig> {
         int size = random.nextInt(config.minSize, config.maxSize) - 1;
         byte propagatorsRemaining = config.propagatorCount;
         for(byte i = 0; i < config.propagatorCount; i++){
-            propagators[i] = new Propagator(newOrigin);
+            propagators[i] = new Propagator(newOrigin, hidden);
             propsDead[i] = false;
         }
         for(byte i = 0; i < size && propagatorsRemaining > 0;) {

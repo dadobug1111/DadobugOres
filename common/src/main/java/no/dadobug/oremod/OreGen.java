@@ -51,6 +51,15 @@ public class OreGen {
         return this;
     }
 
+    public OreGen GenHidden(RuleTest replaced, int size, int chance, BlockState ore, String id, Predicate<BiomeModifications.BiomeContext> where){
+        this.Ore = Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new ResourceLocation(EntryModule.modid, id), new ConfiguredFeature<>(EntryModule.BEDROCK_ORE_GENERATOR.get(),new BedrockOreFeatureConfig(replaced, ore, size, 1, BedrockOreFeatureConfig.WorldLayer.HIDDEN)));
+        this.PlacedOre = Registry.register(BuiltinRegistries.PLACED_FEATURE, new ResourceLocation(EntryModule.modid, id), new PlacedFeature(Holder.direct(this.Ore) , List.of(RarityFilter.onAverageOnceEvery(chance), InSquarePlacement.spread(), HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.top()), BiomeFilter.biome())));
+        this.id = id;
+        this.where = where;
+
+        return this;
+    }
+
     public OreGen GenBottom(RuleTest replaced, int size, BlockState ore, String id, Predicate<BiomeModifications.BiomeContext> where, int count){
         this.Ore = Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new ResourceLocation(EntryModule.modid, id), new ConfiguredFeature<>(EntryModule.BEDROCK_ORE_GENERATOR.get(),new BedrockOreFeatureConfig(replaced, ore, size, 1, BedrockOreFeatureConfig.WorldLayer.BOTTOM)));
         this.PlacedOre = Registry.register(BuiltinRegistries.PLACED_FEATURE, new ResourceLocation(EntryModule.modid, id), new PlacedFeature(Holder.direct(this.Ore) , List.of(CountPlacement.of(count), InSquarePlacement.spread(), HeightRangePlacement.of(ConstantHeight.of(VerticalAnchor.BOTTOM)), BiomeFilter.biome())));
@@ -71,6 +80,15 @@ public class OreGen {
 
     public OreGen GenAll(RuleTest replaced, int size, BlockState ore, String id, Predicate<BiomeModifications.BiomeContext> where, int count){
         this.Ore = Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new ResourceLocation(EntryModule.modid, id), new ConfiguredFeature<>(EntryModule.BEDROCK_ORE_GENERATOR.get(),new BedrockOreFeatureConfig(replaced, ore, size, 1, BedrockOreFeatureConfig.WorldLayer.ALL)));
+        this.PlacedOre = Registry.register(BuiltinRegistries.PLACED_FEATURE, new ResourceLocation(EntryModule.modid, id), new PlacedFeature(Holder.direct(this.Ore) , List.of(CountPlacement.of(count), InSquarePlacement.spread(), HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.top()), BiomeFilter.biome())));
+        this.id = id;
+        this.where = where;
+
+        return this;
+    }
+
+    public OreGen GenHidden(RuleTest replaced, int size, BlockState ore, String id, Predicate<BiomeModifications.BiomeContext> where, int count){
+        this.Ore = Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new ResourceLocation(EntryModule.modid, id), new ConfiguredFeature<>(EntryModule.BEDROCK_ORE_GENERATOR.get(),new BedrockOreFeatureConfig(replaced, ore, size, 1, BedrockOreFeatureConfig.WorldLayer.HIDDEN)));
         this.PlacedOre = Registry.register(BuiltinRegistries.PLACED_FEATURE, new ResourceLocation(EntryModule.modid, id), new PlacedFeature(Holder.direct(this.Ore) , List.of(CountPlacement.of(count), InSquarePlacement.spread(), HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.top()), BiomeFilter.biome())));
         this.id = id;
         this.where = where;

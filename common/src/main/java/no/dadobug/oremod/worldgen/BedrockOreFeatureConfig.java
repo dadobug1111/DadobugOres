@@ -14,7 +14,8 @@ public class BedrockOreFeatureConfig implements FeatureConfiguration {
     public enum WorldLayer{
         TOP,
         BOTTOM,
-        ALL
+        ALL,
+        HIDDEN
     }
     public static final Codec<BedrockOreFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> {
         return instance.group(Codec.list(BedrockOreFeatureConfig.Target.CODEC).fieldOf("targets").forGetter((config) -> {
@@ -25,7 +26,7 @@ public class BedrockOreFeatureConfig implements FeatureConfiguration {
             return config.minSize;
         }), Codec.floatRange(0.0F, 1.0F).fieldOf("discard_chance_on_air_exposure").forGetter((config) -> {
             return config.discardOnAirChance;
-        }), Codec.intRange(0,2).fieldOf("worldLayer").forGetter((config) -> {
+        }), Codec.intRange(0,3).fieldOf("worldLayer").forGetter((config) -> {
             return config.worldLayer.ordinal();
         }), Codec.BYTE.fieldOf("max_distance_from_origin").forGetter((config) -> {
             return config.maxDistanceFromOrigin;
@@ -52,13 +53,7 @@ public class BedrockOreFeatureConfig implements FeatureConfiguration {
     }
     public BedrockOreFeatureConfig(List<Target> targets, int maxSize, int minSize, Float discardOnAirChance, int worldLayer, byte maxDistanceFromOrigin, byte propagatorCount) {
         WorldLayer layer;
-        if(WorldLayer.ALL.ordinal() == worldLayer){
-            layer = WorldLayer.ALL;
-        } else if(WorldLayer.TOP.ordinal() == worldLayer){
-            layer = WorldLayer.TOP;
-        } else{
-            layer = WorldLayer.BOTTOM;
-        }
+        layer = WorldLayer.values()[worldLayer];
         this.maxSize = maxSize;
         this.minSize = minSize;
         this.targets = targets;

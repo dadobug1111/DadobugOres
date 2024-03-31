@@ -10,11 +10,15 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 
 import java.util.ArrayList;
 
+import static net.minecraft.world.level.levelgen.feature.Feature.isAdjacentToAir;
+
 public class Propagator {
     private BlockPos pos;
+    private boolean hidden;
 
-    public Propagator(BlockPos pos){
+    public Propagator(BlockPos pos, boolean hidden){
         this.pos = pos;
+        this.hidden = hidden;
     }
 
     public BlockPos getPos() {
@@ -26,16 +30,16 @@ public class Propagator {
         boolean LoopSuccess = false;
         for(byte i = 0; i < 6; i++) {
             Direction direction = Direction.from3DDataValue(i);
-            if(targets.stream().anyMatch((target) -> target.getFirst().test(world.getBlockState(pos.relative(direction)), random))){
-                possibleChoices.add(pos.relative(direction));
+            if(targets.stream().anyMatch((target) -> target.getFirst().test(world.getBlockState(this.pos.relative(direction)), random))){
+                possibleChoices.add(this.pos.relative(direction));
                 LoopSuccess = true;
             }
         }
         if(LoopSuccess){
-            pos = possibleChoices.size()==1?possibleChoices.get(0):possibleChoices.get(random.nextInt(possibleChoices.size() - 1));
+            this.pos = possibleChoices.size()==1?possibleChoices.get(0):possibleChoices.get(random.nextInt(possibleChoices.size() - 1));
             return targets.stream().anyMatch((target) -> {
-                if (target.getFirst().test(world.getBlockState(pos), random)) {
-                    world.setBlock(pos, target.getSecond(), 3);
+                if (target.getFirst().test(world.getBlockState(this.pos), random)) {
+                    if(!(this.hidden && isAdjacentToAir(world::getBlockState, this.pos)))world.setBlock(this.pos, target.getSecond(), 3);
                     return true;
                 }
                 return false;
@@ -47,8 +51,8 @@ public class Propagator {
                         byte finalX = (byte) (x - 1);
                         byte finalY = (byte) (y - 1);
                         byte finalZ = (byte) (z - 1);
-                        if(targets.stream().anyMatch((target) -> target.getFirst().test(world.getBlockState(pos.offset(finalX, finalY, finalZ)), random))){
-                            possibleChoices.add(pos.offset(finalX, finalY, finalZ));
+                        if(targets.stream().anyMatch((target) -> target.getFirst().test(world.getBlockState(this.pos.offset(finalX, finalY, finalZ)), random))){
+                            possibleChoices.add(this.pos.offset(finalX, finalY, finalZ));
                             LoopSuccess = true;
                         }
 
@@ -56,10 +60,10 @@ public class Propagator {
                 }
             }
             if(LoopSuccess){
-                pos = possibleChoices.size()==1?possibleChoices.get(0):possibleChoices.get(random.nextInt(possibleChoices.size() - 1));
+                this.pos = possibleChoices.size()==1?possibleChoices.get(0):possibleChoices.get(random.nextInt(possibleChoices.size() - 1));
                 return targets.stream().anyMatch((target) -> {
-                    if (target.getFirst().test(world.getBlockState(pos), random)) {
-                        world.setBlock(pos, target.getSecond(), 3);
+                    if (target.getFirst().test(world.getBlockState(this.pos), random)) {
+                        if(!(this.hidden && isAdjacentToAir(world::getBlockState, this.pos)))world.setBlock(this.pos, target.getSecond(), 3);
                         return true;
                     }
                     return false;

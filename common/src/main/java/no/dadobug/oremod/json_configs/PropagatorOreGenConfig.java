@@ -102,6 +102,13 @@ public class PropagatorOreGenConfig extends DynamicGenerationConfig {
                         OreGenConfig.addOre(new OreGen().GenAll(test, this.size, state, this.id, where, this.count));
                     }
                 }
+                case "hidden" -> {
+                    if (this.chance > 0) {
+                        OreGenConfig.addOre(new OreGen().GenHidden(test, this.size, this.chance, state, this.id, where));
+                    } else {
+                        OreGenConfig.addOre(new OreGen().GenHidden(test, this.size, state, this.id, where, this.count));
+                    }
+                }
                 default -> {
                     if (this.chance > 0) {
                         OreGenConfig.addOre(new OreGen().GenBottom(test, this.size, this.chance, state, this.id, where));

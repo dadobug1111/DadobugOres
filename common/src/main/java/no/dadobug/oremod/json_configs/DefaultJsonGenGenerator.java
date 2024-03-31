@@ -16,6 +16,7 @@ import java.util.List;
 public class DefaultJsonGenGenerator {
     static String top = "top";
     static String all = "all";
+    static String hidden = "hidden";
     static TagKey<Biome> undergarden = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation("undergarden", "is_undergarden"));
     static TagKey<Biome> moon = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation("beyond_earth", "moon"));
     static TagKey<Biome> mars = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation("beyond_earth", "mars"));
@@ -27,10 +28,10 @@ public class DefaultJsonGenGenerator {
         List<Pair<String, JsonObject>> GenList = new ArrayList<>();
 
         GenList.add(new Pair<>("native_iron_ore_overworld", new PropagatorOreGenConfig("native_iron_ore_overworld").setTargetBlock("NULL").setTargetTag("minecraft:deepslate_ore_replaceables")
-                .setOreBlock(EntryModule.modid +":native_iron_ore").setSize(35).setChance(1).setLayer("all").addBiomeTag(BiomeTags.IS_OVERWORLD).toJsonObject()));
+                .setOreBlock(EntryModule.modid +":native_iron_ore").setSize(35).setChance(1).setLayer(all).addBiomeTag(BiomeTags.IS_OVERWORLD).toJsonObject()));
 
         GenList.add(new Pair<>("native_gold_ore_overworld", new PropagatorOreGenConfig("native_gold_ore_overworld").setTargetBlock("NULL").setTargetTag("minecraft:deepslate_ore_replaceables")
-                .setOreBlock(EntryModule.modid +":native_gold_ore").setSize(25).setChance(1).setLayer("all").addBiomeTag(BiomeTags.IS_OVERWORLD).toJsonObject()));
+                .setOreBlock(EntryModule.modid +":native_gold_ore").setSize(25).setChance(1).setLayer(all).addBiomeTag(BiomeTags.IS_OVERWORLD).toJsonObject()));
 
 
 
@@ -119,10 +120,10 @@ public class DefaultJsonGenGenerator {
 
 
         GenList.add(new Pair<>("bedrock_hollow_end", new PropagatorOreGenConfig("bedrock_hollow_end").setChance(-1).setReplaceWithBlock_State(false).setTargetBlock("minecraft:end_stone")
-                .setOreBlock(EntryModule.modid +":bedrock_hollow").setSize(60).setCount(1).addBiomeTag(BiomeTags.IS_END).setLayer(all).toJsonObject()));
+                .setOreBlock(EntryModule.modid +":bedrock_hollow").setSize(60).setCount(1).addBiomeTag(BiomeTags.IS_END).setLayer(hidden).toJsonObject()));
 
         GenList.add(new Pair<>("bedrock_xp_leak_end", new PropagatorOreGenConfig("bedrock_xp_leak_end").setChance(-1).setReplaceWithBlock_State(false).setTargetBlock("minecraft:end_stone")
-                .setOreBlock(EntryModule.modid +":bedrock_xp_leak").setSize(12).setCount(2).addBiomeTag(BiomeTags.IS_END).setLayer(all).toJsonObject()));
+                .setOreBlock(EntryModule.modid +":bedrock_xp_leak").setSize(12).setCount(2).addBiomeTag(BiomeTags.IS_END).setLayer(hidden).toJsonObject()));
 
 
 
@@ -174,16 +175,16 @@ public class DefaultJsonGenGenerator {
 
 
         GenList.add(new Pair<>("bedrock_tr_peridot_ore_end", new PropagatorOreGenConfig("bedrock_tr_peridot_ore_end").setChance(-1).setReplaceWithBlock_State(false).setTargetBlock("minecraft:end_stone").addRequiredMod("techreborn")
-                .setOreBlock(EntryModule.modid +":bedrock_tr_peridot_ore").setSize(6).setCount(6).addBiomeTag(BiomeTags.IS_END).setLayer(all).toJsonObject()));
+                .setOreBlock(EntryModule.modid +":bedrock_tr_peridot_ore").setSize(6).setCount(6).addBiomeTag(BiomeTags.IS_END).setLayer(hidden).toJsonObject()));
 
         GenList.add(new Pair<>("bedrock_tr_sheldonite_ore_end", new PropagatorOreGenConfig("bedrock_tr_sheldonite_ore_end").setChance(-1).setReplaceWithBlock_State(false).setTargetBlock("minecraft:end_stone").addRequiredMod("techreborn")
-                .setOreBlock(EntryModule.modid +":bedrock_tr_sheldonite_ore").setSize(6).setCount(4).addBiomeTag(BiomeTags.IS_END).setLayer(all).toJsonObject()));
+                .setOreBlock(EntryModule.modid +":bedrock_tr_sheldonite_ore").setSize(6).setCount(4).addBiomeTag(BiomeTags.IS_END).setLayer(hidden).toJsonObject()));
 
         GenList.add(new Pair<>("bedrock_tr_sodalite_ore_end", new PropagatorOreGenConfig("bedrock_tr_sodalite_ore_end").setChance(-1).setReplaceWithBlock_State(false).setTargetBlock("minecraft:end_stone").addRequiredMod("techreborn")
-                .setOreBlock(EntryModule.modid +":bedrock_tr_sodalite_ore").setSize(6).setCount(4).addBiomeTag(BiomeTags.IS_END).setLayer(all).toJsonObject()));
+                .setOreBlock(EntryModule.modid +":bedrock_tr_sodalite_ore").setSize(6).setCount(4).addBiomeTag(BiomeTags.IS_END).setLayer(hidden).toJsonObject()));
 
         GenList.add(new Pair<>("bedrock_tr_tungsten_ore_end", new PropagatorOreGenConfig("bedrock_tr_tungsten_ore_end").setChance(-1).setReplaceWithBlock_State(false).setTargetBlock("minecraft:end_stone").addRequiredMod("techreborn")
-                .setOreBlock(EntryModule.modid +":bedrock_tr_tungsten_ore").setSize(6).setCount(2).addBiomeTag(BiomeTags.IS_END).setLayer(all).toJsonObject()));
+                .setOreBlock(EntryModule.modid +":bedrock_tr_tungsten_ore").setSize(6).setCount(2).addBiomeTag(BiomeTags.IS_END).setLayer(hidden).toJsonObject()));
 
 
 
@@ -208,7 +209,7 @@ public class DefaultJsonGenGenerator {
                 .setOreBlock(EntryModule.modid +":bedrock_er_benitoite_ore").setSize(8).setChance(10).addBiomeTag(BiomeTags.IS_NETHER).setLayer(top).toJsonObject()));
 
         GenList.add(new Pair<>("bedrock_er_anglesite_ore_end", new PropagatorOreGenConfig("bedrock_er_anglesite_ore_end").setChance(-1).setReplaceWithBlock_State(false).setTargetBlock("minecraft:end_stone").addRequiredMod("bigreactors")
-                .setOreBlock(EntryModule.modid +":bedrock_er_anglesite_ore").setSize(8).setCount(4).addBiomeTag(BiomeTags.IS_END).setLayer(all).toJsonObject()));
+                .setOreBlock(EntryModule.modid +":bedrock_er_anglesite_ore").setSize(8).setCount(4).addBiomeTag(BiomeTags.IS_END).setLayer(hidden).toJsonObject()));
 
 
 
@@ -320,7 +321,7 @@ public class DefaultJsonGenGenerator {
 
 
         GenList.add(new Pair<>("bedrock_mm_starrite_ore_end", new PropagatorOreGenConfig("bedrock_mm_starrite_ore_end").setChance(-1).setReplaceWithBlock_State(false).setTargetBlock("minecraft:end_stone").addRequiredMod("mythicmetals")
-                .setOreBlock(EntryModule.modid +":bedrock_mm_starrite_ore").setSize(7).setCount(1).addBiomeTag(BiomeTags.IS_END).setLayer(all).toJsonObject()));
+                .setOreBlock(EntryModule.modid +":bedrock_mm_starrite_ore").setSize(7).setCount(1).addBiomeTag(BiomeTags.IS_END).setLayer(hidden).toJsonObject()));
 
 
 

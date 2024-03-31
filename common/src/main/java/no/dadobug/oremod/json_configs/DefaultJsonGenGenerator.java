@@ -23,6 +23,7 @@ public class DefaultJsonGenGenerator {
     static TagKey<Biome> venus = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation("beyond_earth", "venus"));
     static TagKey<Biome> mercury = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation("beyond_earth", "mercury"));
     static TagKey<Biome> glacio = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation("beyond_earth", "glacio"));
+    static TagKey<Biome> aether = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation("aether", "is_aether"));
 
     public static void addDefaults(){
         List<Pair<String, JsonObject>> GenList = new ArrayList<>();
@@ -505,6 +506,18 @@ public class DefaultJsonGenGenerator {
 
         GenList.add(new Pair<>("bedrock_pw_uraninite_ore_overworld", new PropagatorOreGenConfig("bedrock_pw_uraninite_ore_overworld").addRequiredMod("powah")
                 .setOreBlock(EntryModule.modid +":bedrock_pw_uraninite_ore").setSize(5).setChance(4).addBiomeTag(BiomeTags.IS_OVERWORLD).toJsonObject()));
+
+
+
+
+        GenList.add(new Pair<>("bedrock_at_ambrosium_ore_aether", new PropagatorOreGenConfig("bedrock_at_ambrosium_ore_aether").setChance(-1).setReplaceWithBlock_State(false).setTargetBlock("aether:holystone").addRequiredMod("aether")
+                .setOreBlock(EntryModule.modid +":bedrock_at_ambrosium_ore").setSize(5).setCount(6).addBiomeTag(aether).setLayer(hidden).toJsonObject()));
+
+        GenList.add(new Pair<>("bedrock_at_gravitite_ore_aether", new PropagatorOreGenConfig("bedrock_at_gravitite_ore_aether").setChance(-1).setReplaceWithBlock_State(false).setTargetBlock("aether:holystone").addRequiredMod("aether")
+                .setOreBlock(EntryModule.modid +":bedrock_at_gravitite_ore").setSize(5).setCount(1).addBiomeTag(aether).setLayer(hidden).toJsonObject()));
+
+        GenList.add(new Pair<>("bedrock_at_zanite_ore_aether", new PropagatorOreGenConfig("bedrock_at_zanite_ore_aether").setChance(-1).setReplaceWithBlock_State(false).setTargetBlock("aether:holystone").addRequiredMod("aether")
+                .setOreBlock(EntryModule.modid +":bedrock_at_zanite_ore").setSize(5).setCount(4).addBiomeTag(aether).setLayer(hidden).toJsonObject()));
 
 
 

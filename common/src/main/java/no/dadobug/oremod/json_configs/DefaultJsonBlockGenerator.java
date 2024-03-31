@@ -462,6 +462,21 @@ public class DefaultJsonBlockGenerator {
 
 
 
+        BlockList.add(new Pair<>("bedrock_at_ambrosium_ore", new RegenerativeBlockConfig("bedrock_at_ambrosium_ore").addRequiredMod("aether").setReplaceBlockId(Blocks.BEDROCK).setXPmax(2).setEnglishName("Bedrock Ambrosium Ore")
+                .setCoreConfig(new RegenerativeCoreConfig("regenerative_at_ambrosium").setEnglishName("Regenerative Ambrosium Cluster").setTextureFile("aether:item/materials/ambrosium_shard"))
+                .setLootConfig(new RegenerativeOreLootConfig().setCoreId("regenerative_at_ambrosium").addOre("aether:ambrosium_ore")).toJsonObject()));
+
+        BlockList.add(new Pair<>("bedrock_at_gravitite_ore", new RegenerativeBlockConfig("bedrock_at_gravitite_ore").addRequiredMod("aether").setReplaceBlockId(Blocks.BEDROCK).setEnglishName("Bedrock Gravitite Ore")
+                .setCoreConfig(new RegenerativeCoreConfig("regenerative_at_gravitite").setEnglishName("Regenerative Gravitite Cluster").setModelFile("aether:block/enchanted_gravitite"))
+                .setLootConfig(new RegenerativeOreLootConfig().setCoreId("regenerative_at_gravitite").addOre("aether:gravitite_ore")).toJsonObject()));
+
+        BlockList.add(new Pair<>("bedrock_at_zanite_ore", new RegenerativeBlockConfig("bedrock_at_zanite_ore").addRequiredMod("aether").setReplaceBlockId(Blocks.BEDROCK).setXPmin(3).setXPmax(5).setEnglishName("Bedrock Zanite Ore")
+                .setCoreConfig(new RegenerativeCoreConfig("regenerative_at_zanite").setEnglishName("Regenerative Zanite Cluster").setTextureFile("aether:item/materials/zanite_gemstone"))
+                .setLootConfig(new RegenerativeOreLootConfig().setCoreId("regenerative_at_zanite").addOre("aether:zanite_ore")).toJsonObject()));
+
+
+
+
         dualDensify(BlockList, "coal", "minecraft", "Coal", 0, 2, 0);
         dualDensify(BlockList, "iron", "minecraft", "Iron", 1);
         dualDensify(BlockList, "gold", "minecraft", "Gold", 2);
@@ -623,6 +638,11 @@ public class DefaultJsonBlockGenerator {
         densify(BlockList, "uraninite_ore", "pw_uraninite_ore", "powah", "Dense Uraninite Ore", Blocks.STONE, 3.2f, 0);
         densify(BlockList, "uraninite_ore_dense", "pw_dense_uraninite_ore", "powah", "SuperDense Uraninite Ore", Blocks.STONE, 4.0f, 0);
         densify(BlockList, "uraninite_ore_poor", "pw_poor_uraninite_ore", "powah", "Dense Poor Uraninite Ore", Blocks.STONE, 3.0f, 0);
+
+
+        densify(BlockList, "ambrosium_ore", "at_ambrosium_ore", "aether", "Dense Ambrosium Ore", "aether:holystone", "aether:block/natural/ambrosium_ore", 0, 2, 3.0f, 0);
+        densify(BlockList, "gravitite_ore", "at_gravitite", "aether", "Dense Gravitite Ore", "aether:holystone", "aether:block/natural/gravitite_ore", 3.0f, 2);
+        densify(BlockList, "zanite_ore", "at_zanite_ore", "aether", "Dense Zanite Ore", "aether:holystone", "aether:block/natural/zanite_ore", 3, 5, 3.0f, 1);
 
 
 

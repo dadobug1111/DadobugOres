@@ -384,6 +384,7 @@ public class RegenerativeBlockConfig extends DynamicBlockConfig {
 
             if(this.denseOreGenTarget != null){
                 RuntimeDataLoader.addDenseGen(() -> OreGenConfig.addDenseOre(this.denseOreGenTarget, new Triplet<>(this.denseOreGenProbability, EntryModule.modid+ ":" + this.id, this.denseOreGenReplaceState)));
+                RuntimeDataLoader.addBlockTag(EntryModule.DENSE_TAG.location(), ResourceLocation.tryBuild(EntryModule.modid, this.id));
             }
 
             switch (this.toolLevel){

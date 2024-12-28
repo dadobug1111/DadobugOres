@@ -3,6 +3,7 @@ package no.dadobug.oremod.blocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.data.models.blockstates.PropertyDispatch;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
@@ -183,7 +184,7 @@ public class RegenerativeBlock extends BaseEntityBlock implements BucketPickup {
         if(world instanceof ServerLevel serverLevel) {
             BlockEntity entity = serverLevel.getBlockEntity(pos);
             if (entity instanceof RegenerativeBlockEntity regenerativeBlock) {
-                regenerativeBlock.registerMiningParameters(player, state);
+                if(player instanceof ServerPlayer serverPlayer) EntryModule.BREAK_REGENERATIVE_BLOCK_TRIGGER.trigger(serverPlayer, serverLevel, pos, regenerativeBlock.registerMiningParameters(player, state), this.infinite, this.silk_able);
             }
         }
         super.playerWillDestroy(world, pos, state, player);

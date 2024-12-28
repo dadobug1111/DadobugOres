@@ -2,14 +2,23 @@ package no.dadobug.oremod.runtime_data;
 
 
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.advancements.*;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.Registry;
 import net.minecraft.data.models.BlockModelGenerators;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.LootTable;
 import no.dadobug.oremod.EntryModule;
+import no.dadobug.oremod.advancements.BreakRegenerativeBlockTrigger;
 import pers.solid.brrp.v1.RRPEventHelper;
 import pers.solid.brrp.v1.api.LanguageProvider;
 import pers.solid.brrp.v1.api.RuntimeResourcePack;
@@ -98,6 +107,7 @@ public class RuntimeDataLoader {
             if(packType.equals(PackType.CLIENT_RESOURCES) && !blockStatesAdded) {
                 blockStateList.forEach(Runnable::run);
                 genLang();
+                genAdvancements();
                 blockStatesAdded = true;
             }
             return provider;
@@ -168,6 +178,31 @@ public class RuntimeDataLoader {
         builder.add("item.dadobugores.regen_power.tooltip","It hums with great power");
         builder.add("item.dadobugores.regen_xp.tooltip","It hums with great magical potential");
 
+        builder.add("advancement.dadobugores.it_came_back.title","It Came Back?");
+        builder.add("advancement.dadobugores.it_came_back.description","Break a regenerative block");
+        builder.add("advancement.dadobugores.no_end_in_sight.title","No End in Sight");
+        builder.add("advancement.dadobugores.no_end_in_sight.description","Mine a bedrock ore");
+        builder.add("advancement.dadobugores.hyperdensity.title","Hyperdensity");
+        builder.add("advancement.dadobugores.hyperdensity.description","Mine a Dense ore");
+        builder.add("advancement.dadobugores.unbreaking_two.title","Unbreaking 2.0");
+        builder.add("advancement.dadobugores.unbreaking_two.description","Preserve the durability of a regenerative block with Gentle Mining");
+        builder.add("advancement.dadobugores.yoink.title","Yoink!");
+        builder.add("advancement.dadobugores.yoink.description","Grab a regenerative block with silk touch");
+        builder.add("advancement.dadobugores.fortune_two.title","Fortune 2.0");
+        builder.add("advancement.dadobugores.fortune_two.description","Shatter the durability of a regenerative block for quick riches");
+        builder.add("advancement.dadobugores.native_bounty.title","Native Bounty");
+        builder.add("advancement.dadobugores.native_bounty.description","Mine a native ore");
+        builder.add("advancement.dadobugores.magic_plumber.title","Know Any Magic Plumbers?");
+        builder.add("advancement.dadobugores.magic_plumber.description","Mine an xp leak");
+        builder.add("advancement.dadobugores.fractured.title","I Hope That Wasn't Important...");
+        builder.add("advancement.dadobugores.fractured.description","Fracture a bedrock ore. Be careful around it!");
+        builder.add("advancement.dadobugores.gone_for_good.title","Gone For Good");
+        builder.add("advancement.dadobugores.gone_for_good.description","Shatter a bedrock ore, granting you fast resources for a price...");
+        builder.add("advancement.dadobugores.hollow.title","Hollowing It Out");
+        builder.add("advancement.dadobugores.hollow.description","Extract a regenerative core from the bedrock");
+        builder.add("advancement.dadobugores.regen_relocate.title","Regenerative Relocation");
+        builder.add("advancement.dadobugores.regen_relocate.description","Place a regenerative core in a suitable host block");
+
         builder.add("itemGroup.dadobugores.item_group","Bedrock Ores");
 
         builder.add("block.dadobugores.bedrock_hollow","Hollow Bedrock");
@@ -176,6 +211,152 @@ public class RuntimeDataLoader {
         builder.add("item.dadobugores.regenerative_fractured","Fractured Regenerative Cluster");
 
         provider.addLang(new ResourceLocation(EntryModule.modid, "en_us"), builder);
+    }
+
+    private static void genAdvancements() {
+        provider.addAdvancement(new ResourceLocation(EntryModule.modid, "it_came_back"), Advancement.Builder.advancement()
+                .display(new DisplayInfo(new ItemStack(Registry.BLOCK.get(new ResourceLocation(EntryModule.modid, "bedrock_diamond_ore"))),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.it_came_back.title")),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.it_came_back.description")),
+                        new ResourceLocation(EntryModule.modid, "textures/block/native_iron_ore.png"),
+                        FrameType.GOAL,
+                        true, true, false
+                ))
+                .addCriterion("break", new Criterion(BreakRegenerativeBlockTrigger.TriggerInstance.breakRegenerativeBlock())));
+
+
+        provider.addAdvancement(new ResourceLocation(EntryModule.modid, "no_end_in_sight"), Advancement.Builder.advancement()
+                .display(new DisplayInfo(new ItemStack(Registry.BLOCK.get(new ResourceLocation(EntryModule.modid, "bedrock_gold_ore"))),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.no_end_in_sight.title")),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.no_end_in_sight.description")),
+                        null,
+                        FrameType.TASK,
+                        true, true, false
+                ))
+                .addCriterion("break", new Criterion(BreakRegenerativeBlockTrigger.TriggerInstance.breakRegenerativeBlock(EntryModule.CORE_TAG)))
+                .parent(new ResourceLocation(EntryModule.modid, "it_came_back")));
+
+
+        provider.addAdvancement(new ResourceLocation(EntryModule.modid, "hyperdensity"), Advancement.Builder.advancement()
+                .display(new DisplayInfo(new ItemStack(Registry.BLOCK.get(new ResourceLocation(EntryModule.modid, "dense_diamond_ore"))),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.hyperdensity.title")),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.hyperdensity.description")),
+                        null,
+                        FrameType.TASK,
+                        true, true, false
+                ))
+                .addCriterion("break", new Criterion(BreakRegenerativeBlockTrigger.TriggerInstance.breakRegenerativeBlock(EntryModule.DENSE_TAG)))
+                .parent(new ResourceLocation(EntryModule.modid, "it_came_back")));
+
+        ItemStack gentlepick = Items.DIAMOND_PICKAXE.getDefaultInstance();
+        gentlepick.enchant(EntryModule.GENTLE_MINING.get(), 5);
+        provider.addAdvancement(new ResourceLocation(EntryModule.modid, "unbreaking_two"), Advancement.Builder.advancement()
+                .display(new DisplayInfo(gentlepick,
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.unbreaking_two.title")),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.unbreaking_two.description")),
+                        null,
+                        FrameType.TASK,
+                        true, true, false
+                ))
+                .addCriterion("break", new Criterion(BreakRegenerativeBlockTrigger.TriggerInstance.Builder.builder().isInfinite(false).setTool(ItemPredicate.Builder.item().hasEnchantment(new EnchantmentPredicate(EntryModule.GENTLE_MINING.get(), MinMaxBounds.Ints.ANY)).build()).build()))
+                .parent(new ResourceLocation(EntryModule.modid, "hyperdensity")));
+
+        ItemStack shatterpick = Items.NETHERITE_PICKAXE.getDefaultInstance();
+        shatterpick.enchant(EntryModule.SHATTERING.get(), 5);
+        provider.addAdvancement(new ResourceLocation(EntryModule.modid, "fortune_two"), Advancement.Builder.advancement()
+                .display(new DisplayInfo(shatterpick,
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.fortune_two.title")),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.fortune_two.description")),
+                        null,
+                        FrameType.TASK,
+                        true, true, false
+                ))
+                .addCriterion("break", new Criterion(BreakRegenerativeBlockTrigger.TriggerInstance.Builder.builder().isInfinite(false).setTool(ItemPredicate.Builder.item().hasEnchantment(new EnchantmentPredicate(EntryModule.SHATTERING.get(), MinMaxBounds.Ints.ANY)).build()).build()))
+                .parent(new ResourceLocation(EntryModule.modid, "hyperdensity")));
+
+
+        provider.addAdvancement(new ResourceLocation(EntryModule.modid, "yoink"), Advancement.Builder.advancement()
+                .display(new DisplayInfo(new ItemStack(Registry.BLOCK.get(new ResourceLocation(EntryModule.modid, "dense_emerald_ore"))),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.yoink.title")),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.yoink.description")),
+                        null,
+                        FrameType.TASK,
+                        true, true, false
+                ))
+                .addCriterion("break", new Criterion(BreakRegenerativeBlockTrigger.TriggerInstance.Builder.builder().isSilkable(true).setTool(ItemPredicate.Builder.item().hasEnchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.Ints.ANY)).build()).build()))
+                .parent(new ResourceLocation(EntryModule.modid, "hyperdensity")));
+
+
+        provider.addAdvancement(new ResourceLocation(EntryModule.modid, "native_bounty"), Advancement.Builder.advancement()
+                .display(new DisplayInfo(new ItemStack(Registry.BLOCK.get(new ResourceLocation(EntryModule.modid, "native_gold_ore"))),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.native_bounty.title")),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.native_bounty.description")),
+                        null,
+                        FrameType.TASK,
+                        true, true, false
+                ))
+                .addCriterion("break", new Criterion(BreakRegenerativeBlockTrigger.TriggerInstance.breakRegenerativeBlock(Registry.BLOCK.get(new ResourceLocation(EntryModule.modid, "native_gold_ore")), Registry.BLOCK.get(new ResourceLocation(EntryModule.modid, "native_iron_ore")))))
+                .parent(new ResourceLocation(EntryModule.modid, "it_came_back")));
+
+
+        provider.addAdvancement(new ResourceLocation(EntryModule.modid, "magic_plumber"), Advancement.Builder.advancement()
+                .display(new DisplayInfo(new ItemStack(Registry.BLOCK.get(new ResourceLocation(EntryModule.modid, "bedrock_xp_leak"))),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.magic_plumber.title")),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.magic_plumber.description")),
+                        null,
+                        FrameType.TASK,
+                        true, true, false
+                ))
+                .addCriterion("break", new Criterion(BreakRegenerativeBlockTrigger.TriggerInstance.breakRegenerativeBlock(Registry.BLOCK.get(new ResourceLocation(EntryModule.modid, "bedrock_xp_leak")))))
+                .parent(new ResourceLocation(EntryModule.modid, "no_end_in_sight")));
+
+
+
+        provider.addAdvancement(new ResourceLocation(EntryModule.modid, "fractured"), Advancement.Builder.advancement()
+                .display(new DisplayInfo(EntryModule.BEDROCK_FRACTURED.oreItem().get().getDefaultInstance(),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.fractured.title")),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.fractured.description")),
+                        null,
+                        FrameType.TASK,
+                        true, true, false
+                ))
+                .addCriterion("break", new Criterion(BreakRegenerativeBlockTrigger.TriggerInstance.breakRegenerativeBlock(EntryModule.CURSE_OF_FRACTURING.get(), EntryModule.CORE_TAG)))
+                .parent(new ResourceLocation(EntryModule.modid, "no_end_in_sight")));
+
+
+
+        provider.addAdvancement(new ResourceLocation(EntryModule.modid, "gone_for_good"), Advancement.Builder.advancement()
+                .display(new DisplayInfo(Blocks.BEDROCK.asItem().getDefaultInstance(),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.gone_for_good.title")),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.gone_for_good.description")),
+                        null,
+                        FrameType.TASK,
+                        true, true, false
+                ))
+                .addCriterion("break", new Criterion(BreakRegenerativeBlockTrigger.TriggerInstance.breakRegenerativeBlock(EntryModule.SHATTERING.get(), EntryModule.CORE_TAG)))
+                .parent(new ResourceLocation(EntryModule.modid, "no_end_in_sight")));
+
+        provider.addAdvancement(new ResourceLocation(EntryModule.modid, "hollow"), Advancement.Builder.advancement()
+                .display(new DisplayInfo(EntryModule.BEDROCK_HOLLOW_ITEM.get().getDefaultInstance(),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.hollow.title")),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.hollow.description")),
+                        null,
+                        FrameType.TASK,
+                        true, true, false
+                ))
+                .addCriterion("break", new Criterion(BreakRegenerativeBlockTrigger.TriggerInstance.breakRegenerativeBlock(EntryModule.EXTRACTION.get(), EntryModule.CORE_TAG)))
+                .parent(new ResourceLocation(EntryModule.modid, "no_end_in_sight")));
+
+        provider.addAdvancement(new ResourceLocation(EntryModule.modid, "regen_relocate"), Advancement.Builder.advancement()
+                .display(new DisplayInfo(new ItemStack(Registry.ITEM.get(new ResourceLocation(EntryModule.modid, "regenerative_nether_quartz"))),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.regen_relocate.title")),
+                        MutableComponent.create(new TranslatableContents("advancement.dadobugores.regen_relocate.description")),
+                        null,
+                        FrameType.GOAL,
+                        true, true, false
+                ))
+                .addCriterion("break", new Criterion(new PlacedBlockTrigger.TriggerInstance(EntityPredicate.Composite.ANY, null, StatePropertiesPredicate.ANY, LocationPredicate.ANY, ItemPredicate.Builder.item().of(EntryModule.IS_CORE_TAG).build())))
+                .parent(new ResourceLocation(EntryModule.modid, "hollow")));
     }
 
 

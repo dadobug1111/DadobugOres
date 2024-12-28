@@ -11,6 +11,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.JsonObject;
 import net.minecraft.ChatFormatting;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Registry;
@@ -32,6 +33,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguratio
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
+import no.dadobug.oremod.advancements.BreakRegenerativeBlockTrigger;
 import no.dadobug.oremod.blocks.FracturedBedrockEntity;
 import no.dadobug.oremod.blocks.HollowBedrock;
 import no.dadobug.oremod.blocks.RegenerativeBlockEntity;
@@ -86,6 +88,7 @@ public class EntryModule {
 
 
     public static TagKey<Block> REGEN_TAG = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation("dadobugores", "regenerative_block"));
+    public static TagKey<Block> DENSE_TAG = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation("dadobugores", "dense_ore"));
     public static TagKey<Block> FRACTURE_TAG = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation("dadobugores", "fracture-able_block"));
     public static TagKey<Block> FRACTURE_SOURCE_TAG = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation("dadobugores", "fractured_block"));
     public static TagKey<Block> CORE_TAG = TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation("dadobugores", "contains_core"));
@@ -114,6 +117,10 @@ public class EntryModule {
     public static final RegistrySupplier<Enchantment> GENTLE_MINING = ENCHANTS.register("gentle_mining", () -> new GentleMiningEnchant(ENCHANT_CONFIG.GENTLE_MINING));
     public static final RegistrySupplier<Enchantment> CURSE_OF_SHATTERING = ENCHANTS.register("curse_of_shattering", () -> new CursedShatteringEnchant(ENCHANT_CONFIG.CURSE_OF_SHATTERING));
     public static final RegistrySupplier<Enchantment> ARCANE_EXTRACTION = ENCHANTS.register("arcane_extraction", () -> new ArcaneExtractionEnchant(ENCHANT_CONFIG.ARCANE_EXTRACTION));
+
+
+
+
 
 
 
@@ -162,6 +169,8 @@ public class EntryModule {
 
 
     public static LootItemConditionType MOD_LOOT_CONDITION_TYPE;
+
+    public static final BreakRegenerativeBlockTrigger BREAK_REGENERATIVE_BLOCK_TRIGGER = CriteriaTriggers.register(new BreakRegenerativeBlockTrigger());
 
     public static void init(boolean isClient) {
         ENCHANTS.register();

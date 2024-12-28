@@ -67,29 +67,37 @@ public class RegenerativeBlockEntity extends BlockEntity {
         this.stacksDropped = stacksDropped;
     }
 
-    public void registerMiningParameters(Player player, BlockState state){
+    @Nullable
+    public int[] registerMiningParameters(Player player, BlockState state){
         EntryModule.LOGGER.debug("registerMiningParameters - " + this.keepstate.toString() + " at " + this.worldPosition.toShortString());
         this.regenComplete = false;
         this.lastItem = player.getMainHandItem();
         this.lastPlayer = player;
-        this.damageBlock(state);
+        int[] ints = this.damageBlock(state);
         this.setChanged();
+        return ints;
     }
 
-    public void damageBlock(BlockState state){
+    @Nullable
+    public int[] damageBlock(BlockState state){
         EntryModule.LOGGER.debug("damage - " + this.keepstate.toString() + " at " + this.worldPosition.toShortString());
         Block block = state.getBlock();
+        int[] ints = null;
         if(block instanceof RegenerativeBlock reBlock){
             if(!reBlock.isInfinite() && !(state.is(EntryModule.CORE_TAG) && (EnchantmentHelper.getItemEnchantmentLevel(EntryModule.EXTRACTION.get(), this.lastItem) > 0)) && !(state.is(EntryModule.FRACTURE_TAG) && (EnchantmentHelper.getItemEnchantmentLevel(EntryModule.CURSE_OF_FRACTURING.get(), this.lastItem) > 0)) && !(reBlock.isSilk_able() && (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, this.lastItem) > 0))){
                 if(this.durability < 0){
                     this.resetDurability();
                 }
                 for(int i = 0; i<(EnchantmentHelper.getItemEnchantmentLevel(EntryModule.SHATTERING.get(), this.lastItem)+1); i++) {
+                    ints = new int[2];
+                    ints[0] = this.durability;
                     this.durability = reBlock.damageFunction.apply(this.durability, EnchantmentHelper.getItemEnchantmentLevel(EntryModule.SHATTERING.get(), this.lastItem), EnchantmentHelper.getItemEnchantmentLevel(EntryModule.GENTLE_MINING.get(), this.lastItem), this.getLevel().getRandom());
+                    ints[1] = this.durability;
                 }
                 this.setChanged();
             }
         }
+        return ints;
     }
 
     public void damageBlockFluid(BlockState state){

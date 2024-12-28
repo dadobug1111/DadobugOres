@@ -1,4 +1,4 @@
-# dadobugores-architectury-1.18
+# dadobugores-architectury-1.19
 Both Forge and Fabric!
 
 This mod adds Quasi-unbreakable bedrock ores.
